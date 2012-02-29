@@ -39,14 +39,26 @@
 		toString:function(t) { var cons=this['$limits']; delete this['$limits']; var str=(null!=t?"":"where=")+JSON.stringify(this) + (cons||""); if (null != cons) this['$limits']=cons; return str;}
 		/* TODO: DESC */
 	}; 
+	//"<,<=,>,>=,<>,IN,NOT IN"
 	"lt lte gt gte ne in nin regex".split(" ").forEach(  function(o,n){ops[o]=function(v) { return this.op('$'+o,v)} }); 
 	"limit skip order include count".split(" ").forEach( function(o,n){ops[o]=function(v) { return this.addCon(o,v)} }); 
-	//"<,<=,>,>=,<>,IN,NOT IN"
 
-	function QueryConstraint(whereClause,op,val) {
+	function QueryConstraint(wh,op,val,nomore) {
 		// will put Query Constraints such as limit, skip, order, include, and count.
+		if (!nomore && QueryConstraint != this.constructor) new QueryConstraint(wh,op,val,true);
+		this.whereC = wh;
+		this.cons = [op+"="+val]; 
+		return this;
 	}
-
+	
+	function dequote(json) { return json.replace(/\\"/g, '"').replace(/"/g, "'"); }
+	
+	QueryConstraint.prototype = {		
+		 add: function (op, val) { this.cons.push(op+"="+val); return this; }
+		 // want JSON.parse(o) -> {'k':{'$op':'val'}}&count=n&limit=m but not valid JSON, so unlikely.
+		,toJSON: function () { return dequote(this.whereC.toString(1)) + '&' + this.cons.join('&'); }
+		,toString: function () { return '?' + this.whereC.toString() + '&' + this.cons.join('&'); }
+	}
 
 	function WhereClause(k) { 
 		_key = k;
@@ -112,6 +124,22 @@ f.toString() ===
 var sqlTest = fromSQL('where x<10 and y="n30" and y between 2 and 6 and q in ["a","b","c","d"]')
 var p=parser(sqlTest)
 execList(p).toString() === eval(sqlTest).toString()
+
+======= Constraints (limit, count, etc)
+
+$.parse.get('tasks?' + ['where='+JSON.stringify({'createdAt':{'$exists':true}}),'limit=3','count=1'].join("&"), cb)
+
+var qtasks = new QueryConstraint( where('createdAt').exists() , 'limit', 3).add('count', 1)
+
+$.parse.get('tasks' + qtasks, cb)
+// 3 tasks with count
+
+var notasks = new QueryConstraint( where('createdAtx').exists() , 'limit', 3).add('count', 1)
+
+$.parse.get('tasks' + notasks, cb)
+// 0 tasks with count=0.
+
+======= 
 
 
 */
