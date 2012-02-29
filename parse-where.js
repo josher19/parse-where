@@ -29,19 +29,18 @@
 		betwixt:function(a)  { _twit=true; return this.gte(a); },
 		notexists: function(){ return this.op('$exists', false); },
 		exists: function(v)  { return this.op('$exists', null==v?true:!!v); },
-		addCon:function(con,val) { this['$limits'] = (this['$limits'] || "") + (AMP+con+"="+val); return this;},
+		addCon:function(con,val) { return new QueryConstraint(this,con,val); }, // now a QueryConstraint, not a WhereClause
+		//addCon:function(con,val) { this['$limits'] = (this['$limits'] || "") + (AMP+con+"="+val); return this;},
 		//addCon:function(con,val) { _end.push(con+"="+val); return this; },
 		//constraints:function() { return _end.length ? AMP + _end.join(AMP) : ""; },
 		toObject:function()  { return this.toString = Object.prototype.toString; }, // or copy it?
 		op: function($op,v)  { var t=this[_key]; if(null==t) t=this[_key]={}; t[$op]=v; return this;},
 		and:   function(k2)  { if (_twit) { _twit=false; return this.lte(k2); } if(null!=k2)_key=k2; return this;},
-		/* there should be a more efficient way to do this */
-		toString:function(t) { var cons=this['$limits']; delete this['$limits']; var str=(null!=t?"":"where=")+JSON.stringify(this) + (cons||""); if (null != cons) this['$limits']=cons; return str;}
+		/* there is a more efficient way to do this */
+		//toString:function(t) { var cons=this['$limits']; delete this['$limits']; var str=(null!=t?"":"where=")+JSON.stringify(this) + (cons||""); if (null != cons) this['$limits']=cons; return str;}
+		toString:function(t) { return (null!=t?"":"where=")+JSON.stringify(this);}
 		/* TODO: DESC */
 	}; 
-	//"<,<=,>,>=,<>,IN,NOT IN"
-	"lt lte gt gte ne in nin regex".split(" ").forEach(  function(o,n){ops[o]=function(v) { return this.op('$'+o,v)} }); 
-	"limit skip order include count".split(" ").forEach( function(o,n){ops[o]=function(v) { return this.addCon(o,v)} }); 
 
 	function QueryConstraint(wh,op,val,nomore) {
 		// will put Query Constraints such as limit, skip, order, include, and count.
@@ -59,6 +58,13 @@
 		,toJSON: function () { return dequote(this.whereC.toString(1)) + '&' + this.cons.join('&'); }
 		,toString: function () { return '?' + this.whereC.toString() + '&' + this.cons.join('&'); }
 	}
+
+	//"<,<=,>,>=,<>,IN,NOT IN"
+	"lt lte gt gte ne in nin regex".split(" ").forEach(  function(o,n){ops[o]=function(v) { return this.op('$'+o,v)} }); 
+	"limit skip order include count".split(" ").forEach( function(o,n){
+		ops[o]=function(v) { return this.addCon(o,v)} ;
+		QueryConstraint.prototype[o]=function(v) { return this.add(o,v)} ;
+	 }); 
 
 	function WhereClause(k) { 
 		_key = k;
