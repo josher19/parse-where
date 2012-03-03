@@ -10,17 +10,18 @@
 
 	(function(GLOBALS){
 
-		var _key, _twit=false, AMP="&"
-		    , mapSQL = {"$exists":" EXISTS ","$lt":"<","$lte":"<=","$gt":">","$gte":">=","$ne":"<>","$in":" IN ","$nin":" NOT IN "}
+		var _key, _twit=false, AMP="&", mapSQL = {"$exists":" EXISTS ","$lt":"<","$lte":"<=","$gt":">","$gte":">=","$ne":"<>","$in":" IN ","$nin":" NOT IN "}
 		// var _end=[]
 		// var AMP = "&";
 		
 		function toSql() { var w=this,k,v,t,res=[]; for(k in w) { v=w[k], t="object" === typeof v && !v.join; if (w.hasOwnProperty(k)) res.push(!t ? [k,v].join(" = ") : toSqlProp(k,v)) }; return "WHERE " + res.join(" AND ").replace(/ EXISTS false/ig, " NOT EXISTS").replace(/ EXISTS true/ig, " EXISTS").replace(/(\S*)>=(\S*) and \1<=/ig, "$1 BETWEEN $2 and "); }
 		function toSqlProp(k,o) { var v, res=[]; for(v in o) { res.push(k + mapSQL[v] + (typeof o[v]==="string"?o[v]:JSON.stringify(o[v]))); } return res.join(" and ") }
 
+		/** `ep.Rate` -> Rate */
+		function dedot(str) { return str.replace(/\w+\./g, "").replace(/`/g, "") } 
+
 		var Sql2fcn = {"^WHERE ":"where("," BETWEEN ":").betwixt("," AND ":").and(","=":").equals("," NOT EXISTS":").notexists(","!=":").ne("," EXISTS ":").exists(","<":").lt(","<=":").lte(",">":").gt(",">=":").gte(","<>":").ne("," IN ":").in("," NOT IN ":").nin(", " LIMIT ":" ).limit( ", " ORDER BY ":" ).order( ", " COUNT ":" ).count( ", " ASC ": " ).asc( ", " DESC ": " ).desc( "};
-		var fromSQL = function(wh) {wh = wh + " "; var r,n,keyz = Object.keys(Sql2fcn).sort(function(a,b) { return b.length - a.length }) ; for(n in keyz) {r=keyz[n]; wh=wh.replace(new RegExp(r, "ig"), Sql2fcn[r]) }; return (wh + ")").replace(/\((\s*)([^()]+?)\s*\)/g, function(m,s,a) { return (a && !isFinite(a) && a[0] && a[0] != '"' && a[0] != "[") ? m.replace(a, JSON.stringify(a)) : m } ).replace(/\(\s+/g, '(').replace(/\s+\)/g, ')');};
-		function dedot(str) { return str.replace(/\w+\./g, "") }
+		var fromSQL = function(wh) {wh = dedot(wh + " "); var r,n,keyz = Object.keys(Sql2fcn).sort(function(a,b) { return b.length - a.length }) ; for(n in keyz) {r=keyz[n]; wh=wh.replace(new RegExp(r, "ig"), Sql2fcn[r]) }; return (wh + ")").replace(/\((\s*)([^()]+?)\s*\)/g, function(m,s,a) { return (a && !isFinite(a) && a[0] && a[0] != '"' && a[0] != "[") ? m.replace(a, JSON.stringify(a)) : m } ).replace(/\(\s+/g, '(').replace(/\s+\)/g, ')');};
 		
 		var ops = { 
 			toSQL: toSql,
@@ -40,8 +41,11 @@
 			and:   function(k2)  { if (_twit) { _twit=false; return this.lte(k2); } if(null!=k2)_key=k2; return this;},
 			/* there is a more efficient way to do this */
 			//toString:function(t) { var cons=this['$limits']; delete this['$limits']; var str=(null!=t?"":"where=")+JSON.stringify(this) + (cons||""); if (null != cons) this['$limits']=cons; return str;}
-			toString:function(t) { return (null!=t?"":"?where=")+JSON.stringify(this);}
-			/* Cannot TODO: NOT BETWEEN because there is no "or"  */
+			toString: function(t){ return (null!=t?"":"?where=")+JSON.stringify(this);},
+			
+			/* some special parse operators */
+			increment: function(amount) { return this.op("__op", "Increment").op("amount", null==amount?1:amount) },
+			decrement: function(amount) { return this.op("__op", "Increment").op("amount", null==amount?-1:-amount) }
 		}; 
 
 		function dequote(json, toSingle) { var q = json.replace(/\\"/g, '"'); if (toSingle) q=q.replace(/"/g, "'"); return q; }	
@@ -59,7 +63,7 @@
 			 // want JSON.parse(o) -> {'k':{'$op':'val'}}&count=n&limit=m but not valid JSON, so unlikely.
 			// ,toJSON: function () { return dequote(this.whereC.toString(1)) + '&' + this.cons.join('&'); }
 			// ,toJSON: function () { return this.whereC } // warning: drops constraints
-			,toString: function () { return '?' + this.whereC.toString() + '&' + this.cons.join('&'); }
+			,toString: function () { return this.whereC.toString() + '&' + this.cons.join('&'); }
 			/* TODO: DESC */
 			,asc: function() { return this; }
 			,desc: function() { 
@@ -97,7 +101,7 @@
 		// me.fromSQL = fromSQL;
 		// return me;
 
-		function jparse(word) { return ("string"==typeof word) ? JSON.parse(word) : word; } // "{json:val}" -> {json:val}
+		function jparse(word) { return (word && "string"==typeof word) ? JSON.parse(word) : word; } // "{json:val}" -> {json:val}
 		function parseWord(word) { var fv=word.split("("), fcn=fv[0], val=jparse(fv[1]);  return [fcn,val] }	// fcn("val") -> [fcn, val]
 		function parser(cmdText) { return String(cmdText).replace(/\)$/, "").split(/\)\./g).map(parseWord); } // format: where(val).fcn1("val1").fcn2(val2)...fcnX(valX) -> [["where", val], ["fcn1", val1], ..., ["fcnX", valX]]
 		function execList(p) { p[0][0]='where'; var i, obj=this, len=p.length; for(i=0;i<len;++i) { obj=obj[p[i][0]](p[i][1]); }; return obj; } // executes where(val).fcn1("val1").fcn2(val2)...fcnX(valX) for functions & values in list
@@ -116,8 +120,17 @@
 			console.info("Running tests for QueryConstraint ...");
 			console.assert( fromSQL("WHERE ascending<'nowhere' AND discount>30 ORDER BY nowhere ASC") ===
 					'where("ascending").lt("\'nowhere\'").and("discount").gt(30).order("nowhere").asc()'
-					, "fromSQL should not convert SQL keywords inside variables"
-			);
+					, "fromSQL should not convert SQL keywords inside variables")
+			console.assert( fromSQL("WHERE `ep.rate` BETWEEN 27 AND 30 ORDER BY `ep.rate` DESC") 
+					=== 'where("rate").betwixt(27).and(30).order("rate").desc()'
+					, " from SQL should handle BETWEEN ")
+			console.assert( parseWhereObj("") === "", 'parseWhereObj edge case ""')
+			console.assert( JSON.stringify(parseWhereObj({"rate":{"$gte":27,"$lte":30}}))
+					=== '{"rate":{"$gte":27,"$lte":30}}'
+					, 'parseWhereObj is opposite of JSON.stringify ')
+			console.assert( parseWhereQuery('where("rate").betwixt(27).and(30).order("rate").desc()').toString()
+					=== '?where={"rate":{"$gte":27,"$lte":30}}&order=-rate'
+					, 'parseWhereQuery should handle DESC properly')
 			console.assert( fromSQL("WHERE ascending<=nowhere AND discount>30 ORDER BY nowhere ASC COUNT").toString()
 					!== 'where("ascending").lte("nowhere").and("discount").gt(30).order("nowhere ASC").count()'
 					, "fromSQL should handle COUNT properly")
@@ -188,7 +201,12 @@
 
 	======= 
 
-	WHERE ep.rate NOT BETWEEN 27 AND 30 \
-	ORDER BY ep.rate
+	WHERE ep.rate BETWEEN 27 AND 30 ORDER BY ep.rate
+	 
+	$.parse.put('GameScore/' + objId, {"score": {"__op": "Increment", "amount": 1 }}, cbplus)
+	
+	where('score').increment();
+	where('score').decrement(2);
+	
 
 	*/
