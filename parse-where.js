@@ -40,8 +40,8 @@
 			and:   function(k2)  { if (_twit) { _twit=false; return this.lte(k2); } if(null!=k2)_key=k2; return this;},
 			/* there is a more efficient way to do this */
 			//toString:function(t) { var cons=this['$limits']; delete this['$limits']; var str=(null!=t?"":"where=")+JSON.stringify(this) + (cons||""); if (null != cons) this['$limits']=cons; return str;}
-			toString:function(t) { return (null!=t?"":"where=")+JSON.stringify(this);}
-			/* TODO: NOT BETWEEN */
+			toString:function(t) { return (null!=t?"":"?where=")+JSON.stringify(this);}
+			/* Cannot TODO: NOT BETWEEN because there is no "or"  */
 		}; 
 
 		function dequote(json, toSingle) { var q = json.replace(/\\"/g, '"'); if (toSingle) q=q.replace(/"/g, "'"); return q; }	
@@ -188,5 +188,7 @@
 
 	======= 
 
+	WHERE ep.rate NOT BETWEEN 27 AND 30 \
+	ORDER BY ep.rate
 
 	*/
