@@ -46,6 +46,13 @@
 			/* some special parse operators */
 			increment: function(amount) { return this.op("__op", "Increment").op("amount", null==amount?1:amount) },
 			decrement: function(amount) { return this.op("__op", "Increment").op("amount", null==amount?-1:-amount) }
+			
+			/* 
+			 * TODO:  
+			 * Dates: 'where={"createdAt": {"$gte": {"__type": "Date", "iso": "2011-08-21T18:02:52.249Z"}}}'  	High Priority
+			 * Bytes: { "__type": "Bytes", "base64": "VGhpcyBpcyBhbiBlbmNvZGVkIHN0cmluZw==" }  	Low Priority
+			 * Pointers: { "__type": "Pointer", "className": "GameScore",  "objectId": "Ed1nuqPvc" }  	Low Priority
+			 */
 		}; 
 
 		function dequote(json, toSingle) { var q = json.replace(/\\"/g, '"'); if (toSingle) q=q.replace(/"/g, "'"); return q; }	
@@ -100,13 +107,20 @@
 		// me=new WhereClause();  
 		// me.fromSQL = fromSQL;
 		// return me;
-
-		function jparse(word) { return (word && "string"==typeof word) ? JSON.parse(word) : word; } // "{json:val}" -> {json:val}
-		function parseWord(word) { var fv=word.split("("), fcn=fv[0], val=jparse(fv[1]);  return [fcn,val] }	// fcn("val") -> [fcn, val]
-		function parser(cmdText) { return String(cmdText).replace(/\)$/, "").split(/\)\./g).map(parseWord); } // format: where(val).fcn1("val1").fcn2(val2)...fcnX(valX) -> [["where", val], ["fcn1", val1], ..., ["fcnX", valX]]
-		function execList(p) { p[0][0]='where'; var i, obj=this, len=p.length; for(i=0;i<len;++i) { obj=obj[p[i][0]](p[i][1]); }; return obj; } // executes where(val).fcn1("val1").fcn2(val2)...fcnX(valX) for functions & values in list
 		
-		/** Convert from parse-where Query String to a WhereClause object. Or just eval it if it starts with where('v')... */
+		/** String '{"key":val}' --> Object {"json":val} */
+		function jparse(word) { return (word && "string"==typeof word) ? JSON.parse(word) : word; } 
+		/** String 'fcn("val' --> Array [fcn, val] */
+		function parseWord(word) { var fv=word.split("("), fcn=fv[0], val=jparse(fv[1]);  return [fcn,val] }	
+		/** format: String 'where(val).fcn1("val1").fcn2(val2)...fcnX(valX)' -> Array of Arrays [["where", val], ["fcn1", val1], ..., ["fcnX", valX]] */
+		function parser(cmdText) { return String(cmdText).replace(/\)$/, "").split(/\)\./g).map(parseWord); } 
+		/** executes `where(val).fcn1("val1").fcn2(val2)...fcnX(valX)` for functions & values in list */
+		function execList(p) { p[0][0]='where'; var i, obj=this, len=p.length; for(i=0;i<len;++i) { obj=obj[p[i][0]](p[i][1]); }; return obj; } 
+		
+		/** 
+		 * Convert from parse-where Query String to a WhereClause object. Or just eval it if it starts with where('v')... 
+		 * String 'where(val).lt(arg).and(valX).gte(argX)' --> Object {val:{"$lt":arg},valX:{"$gte":argX}}. 
+		 */
 		function parseWhere(cmdText) { return execList(parser(cmdText)); } // or just eval it
 
 		var where = function(k) { return new WhereClause(k); };
@@ -208,5 +222,7 @@
 	where('score').increment();
 	where('score').decrement(2);
 	
+	$.parse.put('GameScore/' + objId, where("score").decrement(3), cbplus);
+	$.parse.put('GameScore/' + objId, where("score").increment(3), cbplus)
 
 	*/

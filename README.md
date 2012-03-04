@@ -14,6 +14,7 @@ which gets converted to:
 
 for passing to $.parse.get
 
+## Other Operators
 
 <pre>
 $op 	Name
@@ -30,6 +31,32 @@ $exists	A value is set for the key
 $regex	Regular Expressions
 </pre>
 
+For functionional notation, remove the '$'. 
+SQL: "WHERE x > 100" 
+	becomes Where function: where('x').gt(100) 
+	becomes Where Object {"x":{"$gt":100}} 
+	becomes query string '?where={"x":{"$gt":100}}'
+
+## Query Constraints
+
+Additional query constraints that can be given at the end of the the Where Clause:
+`limit skip order include count`
+Also, can be given after order('x').desc() translated to '&limit=-x' appended to the Query String.
+Note that these must be appended to the Query String rather than as an object.
+
+### Usage:
+
+    whereQ=where("score").exists();
+    whereQ.toString(1) === '{"score":{"$exists":true}}';
+    whereQ.toString() === '?where={"score":{"$exists":true}}';
+    $.parse.get('GameScore', whereQ, callback);  // ok
+    $.parse.get('GameScore' + whereQ, callback); // better
+    
+    whereLimit=where("score").exists().order("score").desc().limit(10).count();
+     $.parse.get('GameScore', whereLimit, callback);  // NOT OK!
+     $.parse.get('GameScore' + whereLimit, callback);  // ok
+
+## Summary
 
 Use functions to create "where" objects to send to parse.com
 Can also convert to and from a subset of SQL. Sorry, no "OR" or "GROUP BY"!
