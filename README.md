@@ -1,16 +1,18 @@
 # parse-where
 
-Use functions to create a "where" object that can be used for parse.com
+Use functions to create a "where" object that can be used for parse.com.
+
+Starting with a SQL string:
 
     WHERE key1 <= value AND key1 > value2 AND key3=value3
 
-gets parsed into:
+gets parsed into (using `fromSQL`):
 
-    where('key3').equals('val3').and('k1').gt(1000).and('k1').lte(3000)
+    where("key1").lte("value").and("key1").gt("value2").and("key3").equals("value3")
 
-which gets converted to:
+which gets converted to (using `eval` or `parseWhereQuery`):
 
-    ?where={key1:{$lte: value, $gt:value2}, key3:value3}
+	?where={"key1":{"$lte":value,"$gt":value2},"key3":value3}
 
 for passing to $.parse.get
 
@@ -31,18 +33,20 @@ $exists	A value is set for the key
 $regex	Regular Expressions
 </pre>
 
-For functionional notation, remove the '$'. 
+For functional notation, remove the '$'. 
+
 SQL: "WHERE x > 100" 
-	becomes Where function: where('x').gt(100) 
-	becomes Where Object {"x":{"$gt":100}} 
-	becomes query string '?where={"x":{"$gt":100}}'
+
+* becomes **Where Function Chain**: where('x').gt(100) 
+* becomes **WhereClause Object**: {"x":{"$gt":100}} 
+* becomes **Query String**: '?where={"x":{"$gt":100}}'
 
 ## Query Constraints
 
-Additional query constraints that can be given at the end of the the Where Clause:
-`limit skip order include count`
-Also, can be given after order('x').desc() translated to '&limit=-x' appended to the Query String.
-Note that these must be appended to the Query String rather than as an object.
+Additional query constraints that can be given at the end of the the Where Clause: `limit skip order include count`.
+
+Also, `desc` can be given after `order`. So `order('x').desc()` becomes '&limit=-x' appended to the Query String.
+Note this must be appended to the Query String (1st argument of $.parse.get) rather sent as an object (2nd argument of $.parse.get)
 
 ### Usage:
 
@@ -58,5 +62,5 @@ Note that these must be appended to the Query String rather than as an object.
 
 ## Summary
 
-Use functions to create "where" objects to send to parse.com
-Can also convert to and from a subset of SQL. Sorry, no "OR" or "GROUP BY"!
+Use functions to create "where" objects to send to the parse.com server.
+Can also convert to and from a subset of SQL. Sorry, no "_OR_" or "_GROUP BY_"!
