@@ -225,4 +225,11 @@
 	$.parse.put('GameScore/' + objId, where("score").decrement(3), cbplus);
 	$.parse.put('GameScore/' + objId, where("score").increment(3), cbplus)
 
+	==========
+	
+	function isoDate(d) { return {"__type": "Date", "iso": d.toJSON ? d.toJSON() : d} }
+	var expected={"__type": "Date", "iso": "2011-08-21T18:02:52.249Z"}
+	var d = new Date(Date.UTC(2011,08-1,21,18,02,52,249))
+	console.assert( JSON.stringify(isoDate(d)) === JSON.stringify(expected), "isoDate uses UTC time")
+	 
 	*/
