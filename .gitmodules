@@ -1,0 +1,3 @@
+[submodule "vendor/jQuery-Parse"]
+	path = vendor/jQuery-Parse
+	url = git://github.com/josher19/jQuery-Parse.git
