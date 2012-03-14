@@ -57,9 +57,6 @@
 
 		function dequote(json, toSingle) { var q = json.replace(/\\"/g, '"'); if (toSingle) q=q.replace(/"/g, "'"); return q; }	
 
-		/** Convert hash to Constaint List: {limit:10,skip:100,order=-score} ==> "&limit=10&skip=100&order=-score" */
-		function asConstraint(hash) { var res=[""],k; for (k in hash) if (null != hash[k]) res.push(k + "=" + hash[k]); return res.join("&");}
-
 		function QueryConstraint(wh,op,val,p,nomore) {
 			// will put Query Constraints such as limit, skip, order, include, and count.
 			if (!nomore && QueryConstraint != this.constructor) new QueryConstraint(wh,op,val,p,true);
@@ -76,7 +73,9 @@
 			 // want JSON.parse(o) -> {'k':{'$op':'val'}}&count=n&limit=m but not valid JSON, so unlikely.
 			// ,toJSON: function () { return dequote(this.whereC.toString(1)) + '&' + this.cons.join('&'); }
 			// ,toJSON: function () { return this.whereC } // warning: drops constraints
-			,toString: function () { return String(this.whereC || '?') + asConstraint(this.cons) /* '&' + this.cons.join('&') */ ; }
+			,toString: function () { return String(this.whereC || '?') + this.toConstraint(this.cons) /* '&' + this.cons.join('&') */ ; }
+			/** Convert hash to Constaint List: {limit:10,skip:100,order=-score} ==> "&limit=10&skip=100&order=-score" */
+			,toConstraint: function asConstraint() { var hash=this.cons; var res=[""],k; for (k in hash) if (null != hash[k]) res.push(k + "=" + hash[k]); return res.join("&");}
 			/* TODO: DESC */
 			,asc: function() { 
 				var h=this.cons; 
@@ -136,7 +135,7 @@
 		/** format: String 'where(val).fcn1("val1").fcn2(val2)...fcnX(valX)' -> Array of Arrays [["where", val], ["fcn1", val1], ..., ["fcnX", valX]] */
 		function parser(cmdText) { return String(cmdText).replace(/\)$/, "").split(/\)\./g).map(parseWord); } 
 		/** executes `where(val).fcn1("val1").fcn2(val2)...fcnX(valX)` for functions & values in list */
-		function execList(p) { p[0][0]='where'; var i, obj=this, len=p.length; for(i=0;i<len;++i) { obj=obj[p[i][0]](p[i][1]); }; return obj; } 
+		function execList(p) { p[0][0]='where'; var i, obj=GLOBALS, len=p.length; for(i=0;i<len;++i) { obj=obj[p[i][0]](p[i][1]); }; return obj; } 
 		
 		/** 
 		 * Convert from parse-where Query String to a WhereClause object. Or just eval it if it starts with where('v')... 
@@ -151,7 +150,7 @@
 		GLOBALS['parseWhereQuery'] = parseWhere;
 		GLOBALS['parseWhereObj'] = jparse;
 		
-		if (GLOBALS.console && console.assert) {
+		if ("undefined" !== typeof console && console.assert) {
 			console.info("Running tests for QueryConstraint ...");
 			console.assert( fromSQL("WHERE ascending<'nowhere' AND discount>30 ORDER BY nowhere ASC") ===
 					'where("ascending").lt("\'nowhere\'").and("discount").gt(30).order("nowhere").asc()'
@@ -159,6 +158,7 @@
 			console.assert( fromSQL("WHERE `ep.rate` BETWEEN 27 AND 30 ORDER BY `ep.rate` DESC") 
 					=== 'where("rate").betwixt(27).and(30).order("rate").desc()'
 					, " from SQL should handle BETWEEN ")
+			var parseWhereObj = GLOBALS['parseWhereObj'], parseWhereQuery=GLOBALS['parseWhereQuery'], where=GLOBALS.where;
 			console.assert( parseWhereObj("") === "", 'parseWhereObj edge case ""')
 			console.assert( JSON.stringify(parseWhereObj({"rate":{"$gte":27,"$lte":30}}))
 					=== '{"rate":{"$gte":27,"$lte":30}}'
@@ -211,7 +211,7 @@
 			console.info("Done testing QueryConstraint");
 		}
 
-	})(window);
+	})(this.exports ? this.exports : this);
 
 	/*
 
