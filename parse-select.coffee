@@ -21,7 +21,7 @@
     # console.log names
 
     $ ?= {}
-    $.parse = get:  (t,w,cb) -> 
+    $.parse.get ?= (t,w,cb) -> 
            console.log("$.parse.get")
            console.log(arguments...)
            if ("function" is typeof w and !cb) then cb=w; w=null
@@ -180,7 +180,11 @@
 
     ss = new Select "name", 'tasks' , "?where={name:{$exists:true}}"
 
-    info $.parse.select("id").from("GameScore").commit().get("id", info)
+#    info $.parse.select("id").from("GameScore").commit().get("id", info)
+
+    info pp=$.parse.select("id").from("GameScore").commit(info)
+
+    if (pp && pp.last) then pp.get("createdAt", info)
 
     console.log  ss, ss.commit(info), ss.last # , SELECT ss.filt, Users
 

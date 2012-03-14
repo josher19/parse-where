@@ -76,7 +76,7 @@
 			 // want JSON.parse(o) -> {'k':{'$op':'val'}}&count=n&limit=m but not valid JSON, so unlikely.
 			// ,toJSON: function () { return dequote(this.whereC.toString(1)) + '&' + this.cons.join('&'); }
 			// ,toJSON: function () { return this.whereC } // warning: drops constraints
-			,toString: function () { return this.whereC.toString() + asConstraint(this.cons) /* '&' + this.cons.join('&') */ ; }
+			,toString: function () { return String(this.whereC || '?') + asConstraint(this.cons) /* '&' + this.cons.join('&') */ ; }
 			/* TODO: DESC */
 			,asc: function() { 
 				var h=this.cons; 
@@ -99,13 +99,18 @@
 				*/
 				return this;
 			}
+			/** limit(50) means return maximum of 50 results. limit(50,20) ==> &skip(50)&limit(20) means skip 50 records and then get 20 results. */
 			,limit: function (skip,v) { if (null==v) {v=skip;} else if (skip) {this.add("skip",skip);} return this.add("limit",v); }
+			/** Skip next p page(s) of results of size n (default: limit or 100).  */
+			, next: function next(p,n) { var c=this.cons; p=p||1; n=n||c.limit||100; c.skip = Math.max(0,(c.skip||0) + p*n);  return this; }
+			/** Skip previous p page(s). @see: next() */
+			, prev: function prev(p,n) { return this.next(p?-p:-1,n); }
 
 		}
 
 		//"<,<=,>,>=,<>,IN,NOT IN"
 		"lt lte gt gte ne in nin regex".split(" ").forEach(  function(o,n){ops[o]=function(v) { return this.op('$'+o,v)} }); 
-		"limit skip order include count".split(" ").forEach( function(o,n){
+		"limit skip order include count next prev".split(" ").forEach( function(o,n){
 			ops[o]=function(v,p) { return this.addCon(o,v,p)} ;
 			if (!QueryConstraint.prototype[o]) QueryConstraint.prototype[o] = function(v) { return this.add(o,v)} ;
 		 }); 
@@ -244,11 +249,17 @@
 	$.parse.put('GameScore/' + objId, where("score").decrement(3), cbplus);
 	$.parse.put('GameScore/' + objId, where("score").increment(3), cbplus)
 
+
+    function next(p,n) { var c=this.cons; p=p||1; n=n||c.limit||100; c.skip = Math.max(0,(c.skip||0) + p*n);  return this; }
+
+	function prev(p,n) { return this.next(p?-p:-1,n); }
+	
 	==========
 	
 	function isoDate(d) { return {"__type": "Date", "iso": d.toJSON ? d.toJSON() : d} }
 	var expected={"__type": "Date", "iso": "2011-08-21T18:02:52.249Z"}
 	var d = new Date(Date.UTC(2011,08-1,21,18,02,52,249))
 	console.assert( JSON.stringify(isoDate(d)) === JSON.stringify(expected), "isoDate uses UTC time")
+
 	 
 	*/

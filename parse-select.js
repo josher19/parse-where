@@ -1,7 +1,7 @@
 var __hasProp = Object.prototype.hasOwnProperty;
 
 (function(global, $) {
-  var Select, Users, info, plucker, ss, toSelect, toSelect_test, _base;
+  var Select, Users, info, plucker, pp, ss, toSelect, toSelect_test, _base, _base2;
   plucker = function(map, results) {
     var eachItem, _i, _len, _results;
     _results = [];
@@ -30,8 +30,8 @@ var __hasProp = Object.prototype.hasOwnProperty;
     }
   ];
   if ($ == null) $ = {};
-  $.parse = {
-    get: function(t, w, cb) {
+  if ((_base = $.parse).get == null) {
+    _base.get = function(t, w, cb) {
       console.log("$.parse.get");
       console.log.apply(console, arguments);
       if ("function" === typeof w && !cb) {
@@ -45,8 +45,8 @@ var __hasProp = Object.prototype.hasOwnProperty;
       }), 300);
       cb(Users);
       return this;
-    }
-  };
+    };
+  }
   toSelect = function(fields) {
     if ("function" === typeof fields) return fields;
     if (fields.split) fields = fields.split(",");
@@ -184,13 +184,14 @@ var __hasProp = Object.prototype.hasOwnProperty;
     }
   };
   info('parse.select');
-  if ((_base = $.parse).select == null) {
-    _base.select = function(fields, table, conds) {
+  if ((_base2 = $.parse).select == null) {
+    _base2.select = function(fields, table, conds) {
       return new Select(fields, table, conds);
     };
   }
   ss = new Select("name", 'tasks', "?where={name:{$exists:true}}");
-  info($.parse.select("id").from("GameScore").commit().get("id", info));
+  info(pp = $.parse.select("id").from("GameScore").commit(info));
+  if (pp && pp.last) pp.get("createdAt", info);
   console.log(ss, ss.commit(info), ss.last);
   if (typeof where === "undefined" || where === null) {
     where = function() {
