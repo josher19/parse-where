@@ -8,7 +8,7 @@
 	 * http://about.me/joshuaweinstein/
 	 */
 
-	(function(GLOBALS){
+	(function(GLOBALS,undefined){
 
 		var _key, _twit=false, AMP="&", mapSQL = {"$exists":" EXISTS ","$lt":"<","$lte":"<=","$gt":">","$gte":">=","$ne":"<>","$in":" IN ","$nin":" NOT IN "}
 		// var _end=[]
@@ -32,7 +32,7 @@
 			betwixt:function(a)  { _twit=true; return this.gte(a); },
 			notexists: function(){ return this.op('$exists', false); },
 			exists: function(v)  { return this.op('$exists', null==v?true:!!v); },
-			addCon:function(con,val) { return new QueryConstraint(this,con,val); }, // now a QueryConstraint, not a WhereClause
+			addCon:function(con,val,p) { return new QueryConstraint(this,con,val,p); }, // now a QueryConstraint, not a WhereClause
 			//addCon:function(con,val) { this['$limits'] = (this['$limits'] || "") + (AMP+con+"="+val); return this;},
 			//addCon:function(con,val) { _end.push(con+"="+val); return this; },
 			//constraints:function() { return _end.length ? AMP + _end.join(AMP) : ""; },
@@ -57,23 +57,36 @@
 
 		function dequote(json, toSingle) { var q = json.replace(/\\"/g, '"'); if (toSingle) q=q.replace(/"/g, "'"); return q; }	
 
-		function QueryConstraint(wh,op,val,nomore) {
+		/** Convert hash to Constaint List: {limit:10,skip:100,order=-score} ==> "&limit=10&skip=100&order=-score" */
+		function asConstraint(hash) { var res=[""],k; for (k in hash) if (null != hash[k]) res.push(k + "=" + hash[k]); return res.join("&");}
+
+		function QueryConstraint(wh,op,val,p,nomore) {
 			// will put Query Constraints such as limit, skip, order, include, and count.
-			if (!nomore && QueryConstraint != this.constructor) new QueryConstraint(wh,op,val,true);
+			if (!nomore && QueryConstraint != this.constructor) new QueryConstraint(wh,op,val,p,true);
 			this.whereC = wh;
-			this.cons = [op+"="+val]; 
+			this.cons = {}; // [op+"="+val]; 
+			//this.cons[op]=val;
+			var fn = QueryConstraint.prototype[op];
+			if (fn) fn.call(this,val,p);
 			return this;
 		}
 		
 		QueryConstraint.prototype = {		
-			 add: function (op, val) { this.cons.push(op+"="+val); return this; }
+			 add: function (op, val) { /*this.cons.push(op+"="+val);*/ this.cons[op]=val; return this; }
 			 // want JSON.parse(o) -> {'k':{'$op':'val'}}&count=n&limit=m but not valid JSON, so unlikely.
 			// ,toJSON: function () { return dequote(this.whereC.toString(1)) + '&' + this.cons.join('&'); }
 			// ,toJSON: function () { return this.whereC } // warning: drops constraints
-			,toString: function () { return this.whereC.toString() + '&' + this.cons.join('&'); }
+			,toString: function () { return String(this.whereC || '?') + asConstraint(this.cons) /* '&' + this.cons.join('&') */ ; }
 			/* TODO: DESC */
-			,asc: function() { return this; }
+			,asc: function() { 
+				var h=this.cons; 
+				if ("string" === typeof h.order && h.order.charAt(0) === "-" ) h.order = h.order.substring(1);  
+				return this; 
+			}
 			,desc: function() { 
+				var h = this.cons;
+				if ("string" === typeof h.order && h.order.charAt(0) !== "-" ) h.order = "-" + h.order ;
+				/*
 				var con, i; 
 				for(i=0; i<this.cons.length; ++i) { 
 					con=this.cons[i].split("="); 
@@ -83,15 +96,23 @@
 					}
 					if (GLOBALS.verbose) console.log(con);
 				} 
+				*/
 				return this;
 			}
+			/** limit(50) means return maximum of 50 results. limit(50,20) ==> &skip(50)&limit(20) means skip 50 records and then get 20 results. */
+			,limit: function (skip,v) { if (null==v) {v=skip;} else if (skip) {this.add("skip",skip);} return this.add("limit",v); }
+			/** Skip next p page(s) of results of size n (default: limit or 100).  */
+			, next: function next(p,n) { var c=this.cons; p=p||1; n=n||c.limit||100; c.skip = Math.max(0,(c.skip||0) + p*n);  return this; }
+			/** Skip previous p page(s). @see: next() */
+			, prev: function prev(p,n) { return this.next(p?-p:-1,n); }
+
 		}
 
 		//"<,<=,>,>=,<>,IN,NOT IN"
 		"lt lte gt gte ne in nin regex".split(" ").forEach(  function(o,n){ops[o]=function(v) { return this.op('$'+o,v)} }); 
-		"limit skip order include count".split(" ").forEach( function(o,n){
-			ops[o]=function(v) { return this.addCon(o,v)} ;
-			QueryConstraint.prototype[o]=function(v) { return this.add(o,v)} ;
+		"limit skip order include count next prev".split(" ").forEach( function(o,n){
+			ops[o]=function(v,p) { return this.addCon(o,v,p)} ;
+			if (!QueryConstraint.prototype[o]) QueryConstraint.prototype[o] = function(v) { return this.add(o,v)} ;
 		 }); 
 
 		function WhereClause(k) { 
@@ -160,6 +181,33 @@
 			console.assert( where('x').lt(100).order('x').desc().desc().limit(10).toString() === 
 					'?where={"x":{"$lt":100}}&order=-x&limit=10'
 					, 'For QueryConstraint::desc want order("x").desc().desc() change x once --> "&order=-x"'  );				
+					
+			console.assert( where('x').lt(10).limit(50,25).order('-createdAt').asc().toString() ===
+					where('x').lt(10).skip(50).limit(25).order('createdAt').toString()
+					, "limit(a,b) ==> &skip(a)&limit(b) and asc() opposite of desc() ");
+
+			console.assert( where('score').gt(10).next().toString() ===
+					'?where={"score":{"$gt":10}}&skip=100'
+					, "Skip next 100 items");
+
+			var wh4 = where('score').gt(10).limit(20,50).next();
+			console.assert( wh4.toString() ===
+					'?where={"score":{"$gt":10}}&skip=70&limit=50'
+					, "Skip next 50 items starting at 20");
+			console.assert( wh4.next(2).toString() ===
+					'?where={"score":{"$gt":10}}&skip=170&limit=50'
+					, "Skip next 2 pages of 50");
+			console.assert( wh4.prev(1).toString() ===
+					'?where={"score":{"$gt":10}}&skip=120&limit=50'
+					, "Skip back 2 pages of 50");
+			console.assert( wh4.prev(10).toString() ===
+					'?where={"score":{"$gt":10}}&skip=0&limit=50'
+					, "Lowest number for skip is 0");					
+					
+			console.assert( where('score').gt(50).next(3,20).toString() ===
+					'?where={"score":{"$gt":50}}&skip=60'
+					, "Send parameters via next(pages, pageSize)");
+
 			console.info("Done testing QueryConstraint");
 		}
 
@@ -225,11 +273,17 @@
 	$.parse.put('GameScore/' + objId, where("score").decrement(3), cbplus);
 	$.parse.put('GameScore/' + objId, where("score").increment(3), cbplus)
 
+
+    function next(p,n) { var c=this.cons; p=p||1; n=n||c.limit||100; c.skip = Math.max(0,(c.skip||0) + p*n);  return this; }
+
+	function prev(p,n) { return this.next(p?-p:-1,n); }
+	
 	==========
 	
 	function isoDate(d) { return {"__type": "Date", "iso": d.toJSON ? d.toJSON() : d} }
 	var expected={"__type": "Date", "iso": "2011-08-21T18:02:52.249Z"}
 	var d = new Date(Date.UTC(2011,08-1,21,18,02,52,249))
 	console.assert( JSON.stringify(isoDate(d)) === JSON.stringify(expected), "isoDate uses UTC time")
+
 	 
 	*/
