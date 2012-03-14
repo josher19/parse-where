@@ -181,9 +181,33 @@
 			console.assert( where('x').lt(100).order('x').desc().desc().limit(10).toString() === 
 					'?where={"x":{"$lt":100}}&order=-x&limit=10'
 					, 'For QueryConstraint::desc want order("x").desc().desc() change x once --> "&order=-x"'  );				
+					
 			console.assert( where('x').lt(10).limit(50,25).order('-createdAt').asc().toString() ===
 					where('x').lt(10).skip(50).limit(25).order('createdAt').toString()
 					, "limit(a,b) ==> &skip(a)&limit(b) and asc() opposite of desc() ");
+
+			console.assert( where('score').gt(10).next().toString() ===
+					'?where={"score":{"$gt":10}}&skip=100'
+					, "Skip next 100 items");
+
+			var wh4 = where('score').gt(10).limit(20,50).next();
+			console.assert( wh4.toString() ===
+					'?where={"score":{"$gt":10}}&skip=70&limit=50'
+					, "Skip next 50 items starting at 20");
+			console.assert( wh4.next(2).toString() ===
+					'?where={"score":{"$gt":10}}&skip=170&limit=50'
+					, "Skip next 2 pages of 50");
+			console.assert( wh4.prev(1).toString() ===
+					'?where={"score":{"$gt":10}}&skip=120&limit=50'
+					, "Skip back 2 pages of 50");
+			console.assert( wh4.prev(10).toString() ===
+					'?where={"score":{"$gt":10}}&skip=0&limit=50'
+					, "Lowest number for skip is 0");					
+					
+			console.assert( where('score').gt(50).next(3,20).toString() ===
+					'?where={"score":{"$gt":50}}&skip=60'
+					, "Send parameters via next(pages, pageSize)");
+
 			console.info("Done testing QueryConstraint");
 		}
 
