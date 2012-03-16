@@ -2,7 +2,7 @@
 	 * parse-where
 	 * for creating where objects for use with parse.com website and libraries
 	 *
-	 * @version 0.3
+	 * @version 0.3.1
 	 *
 	 * @author Joshua S. Weinstein
 	 * http://about.me/joshuaweinstein/
@@ -28,8 +28,8 @@
 			notin: function(ra)  { return this.nin(ra); },
 			equals: function(v)  { this[_key]=v; return this}, 
 			eq:     function(v)  { this[_key]=v; return this}, 
-			between:function(a,b){ return this.gte(a).lte(b); },
-			betwixt:function(a)  { _twit=true; return this.gte(a); },
+			between:function(a,b){ if (null==b) return this.betwixt(a); return this.gte(a).lte(b); },
+			betwixt:function(a,b){ if (null!=b) return this.between(a,b); _twit=true; return this.gte(a); },
 			notexists: function(){ return this.op('$exists', false); },
 			exists: function(v)  { return this.op('$exists', null==v?true:!!v); },
 			addCon:function(con,val,p) { return new QueryConstraint(this,con,val,p); }, // now a QueryConstraint, not a WhereClause
@@ -116,6 +116,7 @@
 
 		function WhereClause(k) { 
 			_key = k;
+			_twit=false;
 			// _end = new Array();
 		}	
 
