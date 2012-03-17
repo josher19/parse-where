@@ -47,20 +47,23 @@ function selector(fields, fn, gotdata) {
     return _allresults;  
 }
 
-function sel1(fields, table, whereK, cb) { 
-    var getFields=selector(fields, cb); 
-    return $.parse.get(table + (whereK||""), getFields) 
-}
-
+/**
+ * Select fields from a remote table. Can also do: selectFields(fields).from(table,whereK,cb);
+ * @argument fields String,Array,or Object fields to select, such as "objectId,createdAt,updatedAt"
+ * @argument table String name of remote table
+ * @argument whereK Object or String 
+ * @argument cb function to call with selected data
+ */
 function selectFields(fields, table, whereK, cb) { 
-	var noWhere, getFields; 
+	var getFields; 
+	if (arguments.length === 1) return {from:function(table,whereK,cb) { return selectFields(fields, table, whereK, cb); }};
 	if ("function"===typeof whereK) {
-		cb=whereK;whereK=noWhere; // shift left
+		var noWhere=cb;cb=whereK;whereK=noWhere; // switch cb and whereK
 	} 
 	else if ("function"===typeof table) {
-		cb=table; table=fields; fields="*"; 
+		cb=table; table=fields; fields="*"; // ('GameScore', callback, whereK) ==> ('*', 'GameScore', whereK, callback)
 	}; 
-	getFields=selector(fields, cb); 
-	if (whereK && String(whereK).charAt(0) !== "?") whereK = "?where=" + JSON.stringify(whereK);
+	getFields=selector(fields, cb); // will eventually call: cb(selector(fields)(data.results));
+	if (whereK && String(whereK).charAt(0) !== "?") whereK = "?where=" + JSON.stringify(whereK); // convert to Query String
 	return $.parse.get(table + (whereK || ""), getFields);
 }
