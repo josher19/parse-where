@@ -19,7 +19,7 @@ function selector(fields, fn, gotdata) {
     if ("function" === typeof fn) { return function(d) { return fn(selector(fields)(d)); }}
     if ("function" === typeof fields) { return fields } // use function to find fields to show
     if ("undefined" === typeof gotdata && fn && "object" === typeof fn) { return selector(fields)(fn); }
-    if ("string" === typeof fields) { fields = fields.split(","); } // Strings : "score,objectId" --> Array of Strings : ["score","objectId"]
+    if ("string" === typeof fields) { fields = fields.split(/\s*,\s*/); } // Strings : "score,objectId" --> Array of Strings : ["score","objectId"]
     if (null == fields || "*" === fields[0]) {  // "*" --> Everything
         return _allresults;
     }
@@ -47,6 +47,8 @@ function selector(fields, fn, gotdata) {
     return _allresults;  
 }
 
+var getter = $.parse.get;
+
 /**
  * Select fields from a remote table. Can also do: selectFields(fields).from(table,whereK,cb);
  * @argument fields String,Array,or Object fields to select, such as "objectId,createdAt,updatedAt"
@@ -65,5 +67,7 @@ function selectFields(fields, table, whereK, cb) {
 	}; 
 	getFields=selector(fields, cb); // will eventually call: cb(selector(fields)(data.results));
 	if (whereK && String(whereK).charAt(0) !== "?") whereK = "?where=" + JSON.stringify(whereK); // convert to Query String
-	return $.parse.get(table + (whereK || ""), getFields);
+	return getter(table + (whereK || ""), getFields);
 }
+
+if ("undefined" !== typeof $ && "undefined" !== typeof $.parse) { $.parse.select = selectFields; getter = $.parse.get; }

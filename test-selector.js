@@ -5,7 +5,7 @@ var sean  = {"cheatMode":false,"playerName":"Sean Plott","score":73456},
     
 var seanId, zhangId;
 
-$.parse.log = function() { log(arguments); return this; }
+jQuery.parse.log = function() { log(arguments); return this; }
 
 function cleanup() {
 	log("Cleaning up");
@@ -43,6 +43,14 @@ jQuery.parse.post('GameScoreTest', sean, function(data) {
 	assert(seanId == ids[0], "Two Seans?", seanId, ids[0]);
 	assert(zhangId == ids[1], "Two Zhangs?", zhangId, ids[1]);
 
+});
+
+jQuery.parse.log("Select Object where=", sean)
+.select(zhang).from('GameScoreTest', sean, function(results) {
+	assert(results.length == 1, "More than one result", results);
+	
+	assert(results[0].playerName === sean.playerName, "Wrong playerName", results, sean);
+	
 })
 
 .log("Select String: cheatMode")
@@ -63,9 +71,9 @@ jQuery.parse.post('GameScoreTest', sean, function(data) {
 
 
 /*
- * Interesting Google Chrome error. 
+ * Interesting Google Chrome error:
  * $ === /^\s+/
- * during a breakpoint after failed DELETE, so $.parse is undefined 
+ * during a breakpoint after failed $.parse.delete, so $.parse is undefined 
  */
 
 function prep(o) { var d = $.extend({}, o); delete d.createdAt; delete d.objectId; delete d.updatedAt; return d; }
@@ -73,3 +81,7 @@ function prep(o) { var d = $.extend({}, o); delete d.createdAt; delete d.objectI
 var last; // global objects: BAD!
 function setLast(data, status, defer) { log(arguments); last = data; }
 function getLast() { return last; }
+
+// Looks like we need a way to be able to use $.when to avoid parallel execution problems.
+// Perhaps a way to retrieve $.getJSON called by $.parse ?
+
