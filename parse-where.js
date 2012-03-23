@@ -10,8 +10,9 @@
  */
 
 (function(GLOBALS,undefined){
-
-	var _key, _twit=false, AMP="&", mapSQL = {"$exists":" EXISTS ","$lt":"<","$lte":"<=","$gt":">","$gte":">=","$ne":"<>","$in":" IN ","$nin":" NOT IN "}
+	
+	var last = GLOBALS.last = {},	
+	    _key, _twit=false, AMP="&", mapSQL = {"$exists":" EXISTS ","$lt":"<","$lte":"<=","$gt":">","$gte":">=","$ne":"<>","$in":" IN ","$nin":" NOT IN "}
 	// var _end=[]
 	// var AMP = "&";
 	
@@ -19,7 +20,7 @@
 	function toSqlProp(k,o) { var v, res=[]; for(v in o) { res.push(k + mapSQL[v] + (typeof o[v]==="string"?o[v]:JSON.stringify(o[v]))); } return res.join(" and ") }
 
 	/** dequote: `ep.Rate` --> Rate */
-	function dedot(str) { return str.replace(/\w+\./g, "").replace(/`/g, "") } 
+	function dedot(str) { return str.replace(/\w+\./g, "").replace(/`/g, "").replace(/\n/g, " "); } 
 
 	var Sql2fcn = {"^WHERE ":"where("," BETWEEN ":").betwixt("," AND ":").and(","=":").equals("," NOT EXISTS":").notexists(","!=":").ne("," EXISTS ":").exists(","<":").lt(","<=":").lte(",">":").gt(",">=":").gte(","<>":").ne("," IN ":").in("," NOT IN ":").nin(", " LIMIT ":" ).limit( ", " ORDER BY ":" ).order( ", " COUNT ":" ).count( ", " ASC ": " ).asc( ", " DESC ": " ).desc( "};
 	var fromSQL = function(wh) {wh = dedot(wh + " "); var r,n,keyz = Object.keys(Sql2fcn).sort(function(a,b) { return b.length - a.length }) ; for(n in keyz) {r=keyz[n]; wh=wh.replace(new RegExp(r, "ig"), Sql2fcn[r]) }; return (wh + ")").replace(/\((\s*)([^()]+?)\s*\)/g, function(m,s,a) { return (a && !isFinite(a) && a[0] && a[0] != '"' && a[0] != "[") ? m.replace(a, JSON.stringify(a)) : m } ).replace(/\(\s+/g, '(').replace(/\s+\)/g, ')');};
@@ -47,6 +48,10 @@
 		/* some special parse.com operators */
 		increment: function(amount) { return this.op("__op", "Increment").op("amount", null==amount?1:amount) },
 		decrement: function(amount) { return this.op("__op", "Increment").op("amount", null==amount?-1:-amount) }
+		
+		, select: function(fields) { last.selector = selector.apply(arguments); this.fields=fields; return this; }
+		, from: function(table, whereK, cb) { last.table=table; return this; }
+		, where: function(k) { if(null!=k) _key=k; return this; }
 		
 /** 
  * TODO:  
@@ -144,6 +149,7 @@
 	
 	/** 
 	 * Convert from parse-where Query String to a WhereClause object. Or just eval it if it starts with where('v')... 
+	 * 
 	 * String 'where(val).lt(arg).and(valX).gte(argX)' --> Object {val:{"$lt":arg},valX:{"$gte":argX}}. 
 	 */
 	function parseWhere(cmdText) { return execList(parser(cmdText)); } // or just eval it
@@ -155,6 +161,7 @@
 	GLOBALS['parseWhereQuery'] = parseWhere;
 	GLOBALS['parseWhereObj'] = jparse;
 	
+	/** Run some tests */
 	if ("undefined" !== typeof console && console.assert) {
 		console.info("Running tests for QueryConstraint ...");
 		console.assert( fromSQL("WHERE ascending<'nowhere' AND discount>30 ORDER BY nowhere ASC") ===

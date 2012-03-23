@@ -47,7 +47,7 @@ function selector(fields, fn, gotdata) {
     return _allresults;  
 }
 
-var getter = $.parse.get;
+// var getter = $.parse.get;
 
 /**
  * Select fields from a remote table. Can also do: selectFields(fields).from(table,whereK,cb);
