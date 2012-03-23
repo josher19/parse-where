@@ -4,15 +4,15 @@ function _allresults(data) { return data.results || data; }
  * Extract SQL SELECT style fields from gotdata, calling (optional) callback fn on results.
  * If gotdata is null or undefined, returns a function to call on data.
  * 
- * @argument fields String, Array, or Object
- *     '*' or null: return gotdata object wtihout changes
- *     Object : return Array of Objects using keys from fields
- *              // Object {"score":1,"objectId":1} ==> Array of Objects : [{score:score1, objectId:id1}, {score:score2, objectId:id2} ...]
- *     String : 'score' ==> Array : [score1, score2, score3, ...]
+ * - @arguments: fields String, Array, or Object
+ *     - '*' or null: return gotdata object wtihout changes
+ *     - Object : return Array of Objects using keys from fields.
+ *               - Object {"score":1,"objectId":1} ==> Array of Objects : [{score:score1, objectId:id1}, {score:score2, objectId:id2} ...]
+ *     - String : 'score' ==> Array : [score1, score2, score3, ...]
  *              If fields contains a comma (","), split into an Array and return Array of Arrays instead.
- *     Array : ["score","objectId"] ==> Array of Arrays : [ [score1, id1], [score2, id2], ...]
- * @argument fn Function callback on final results (optional)
- * @argument gotdata Array or Object with 'results' Array (optional)
+ *     - Array : ["score","objectId"] ==> Array of Arrays : [ [score1, id1], [score2, id2], ...]
+ * - @arguments: fn Function callback on final results (optional)
+ * - @argument: gotdata Array or Object with 'results' Array (optional)
  */
 function selector(fields, fn, gotdata) { 
     if (null != gotdata) { return selector(fields, fn)(gotdata); }
@@ -51,10 +51,11 @@ var getter = $.parse.get;
 
 /**
  * Select fields from a remote table. Can also do: selectFields(fields).from(table,whereK,cb);
- * @argument fields String,Array,or Object fields to select, such as "objectId,createdAt,updatedAt"
- * @argument table String name of remote table
- * @argument whereK Object or String 
- * @argument cb function to call with selected data
+ * 
+ * - @argument fields String,Array,or Object fields to select, such as "objectId,createdAt,updatedAt"
+ * - @argument table String name of remote table
+ * - @argument whereK Object or String 
+ * - @argument cb function to call with selected data
  */
 function selectFields(fields, table, whereK, cb) { 
 	var getFields; 
