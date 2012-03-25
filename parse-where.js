@@ -11,8 +11,8 @@
 
 (function(GLOBALS,undefined){
 	
-	var last = GLOBALS.last = {},	
-	    _key, _twit=false, AMP="&", mapSQL = {"$exists":" EXISTS ","$lt":"<","$lte":"<=","$gt":">","$gte":">=","$ne":"<>","$in":" IN ","$nin":" NOT IN "}
+	// var last = GLOBALS.ParsedWhere = {},	
+	var   _key, _twit=false, AMP="&", mapSQL = {"$exists":" EXISTS ","$lt":"<","$lte":"<=","$gt":">","$gte":">=","$ne":"<>","$in":" IN ","$nin":" NOT IN "}
 	// var _end=[]
 	// var AMP = "&";
 	
@@ -20,7 +20,7 @@
 	function toSqlProp(k,o) { var v, res=[]; for(v in o) { res.push(k + mapSQL[v] + (typeof o[v]==="string"?o[v]:JSON.stringify(o[v]))); } return res.join(" and ") }
 
 	/** dequote: `ep.Rate` --> Rate */
-	function dedot(str) { return str.replace(/\w+\./g, "").replace(/`/g, "").replace(/\n/g, " "); } 
+	function dedot(str) { return str.replace(/\w+\./g, "").replace(/`/g, "").replace(/\n/g, " ").replace(/^ /, ""); } 
 
 	var Sql2fcn = {"^WHERE ":"where("," BETWEEN ":").betwixt("," AND ":").and(","=":").equals("," NOT EXISTS":").notexists(","!=":").ne("," EXISTS ":").exists(","<":").lt(","<=":").lte(",">":").gt(",">=":").gte(","<>":").ne("," IN ":").in("," NOT IN ":").nin(", " LIMIT ":" ).limit( ", " ORDER BY ":" ).order( ", " COUNT ":" ).count( ", " ASC ": " ).asc( ", " DESC ": " ).desc( "};
 	var fromSQL = function(wh) {wh = dedot(wh + " "); var r,n,keyz = Object.keys(Sql2fcn).sort(function(a,b) { return b.length - a.length }) ; for(n in keyz) {r=keyz[n]; wh=wh.replace(new RegExp(r, "ig"), Sql2fcn[r]) }; return (wh + ")").replace(/\((\s*)([^()]+?)\s*\)/g, function(m,s,a) { return (a && !isFinite(a) && a[0] && a[0] != '"' && a[0] != "[") ? m.replace(a, JSON.stringify(a)) : m } ).replace(/\(\s+/g, '(').replace(/\s+\)/g, ')');};
@@ -49,9 +49,9 @@
 		increment: function(amount) { return this.op("__op", "Increment").op("amount", null==amount?1:amount) },
 		decrement: function(amount) { return this.op("__op", "Increment").op("amount", null==amount?-1:-amount) }
 		
-		, select: function(fields) { last.selector = selector.apply(arguments); this.fields=fields; return this; }
-		, from: function(table, whereK, cb) { last.table=table; return this; }
-		, where: function(k) { if(null!=k) _key=k; return this; }
+		//, select: function(fields) { last.selector = selector.apply(arguments); last.fields=fields; return this; }
+		//, from: function(table, whereK, cb) { last.table=table; return this; }
+		//, where: function(k) { if(null!=k) _key=k; return this; }
 		
 /** 
  * TODO:  
@@ -64,9 +64,10 @@
 
 	function dequote(json, toSingle) { var q = json.replace(/\\"/g, '"'); if (toSingle) q=q.replace(/"/g, "'"); return q; }	
 
-	function QueryConstraint(wh,op,val,p,nomore) {
-		// will put Query Constraints such as limit, skip, order, include, and count.
-		if (!nomore && QueryConstraint != this.constructor) new QueryConstraint(wh,op,val,p,true);
+	/** Will create Query Constraints such as limit, skip, order, include, and count. */
+	function QueryConstraint(wh,op,val,p,nomore) {		
+		if (GLOBALS.console) console.log(["Created with ", op, "(",val,",",p,") ", !!nomore, " ", !this instanceof QueryConstraint].join(""));
+		if (!nomore && ! (this instanceof QueryConstraint)) { return new QueryConstraint(wh,op,val,p,true); }
 		this.whereC = wh;
 		this.cons = {}; // [op+"="+val]; 
 		//this.cons[op]=val;
@@ -108,7 +109,7 @@
 			return this;
 		}
 		/** limit(50) means return maximum of 50 results. ==> limit(50,20) ==> "&skip(50)&limit(20)" means skip 50 records and then get 20 results. */
-		,limit: function (skip,v) { if (null==v) {v=skip;} else if (skip) {this.add("skip",skip);} return this.add("limit",v); }
+		,limit: function (skip,v) { if ("string" == typeof skip) { skip = skip.split(/\s*,\s*/); v=skip[1]||v; skip=skip[0];}; if (null==v) {v=skip;} else if (skip) {this.add("skip",skip);} return this.add("limit",v); }
 		/** Skip next p page(s) of results of size n (default: limit or 100).  */
 		, next: function next(p,n) { var c=this.cons; p=p||1; n=n||c.limit||100; c.skip = Math.max(0,(c.skip||0) + p*n);  return this; }
 		/** Skip previous p page(s). @see: next() */
@@ -145,7 +146,7 @@
 	/** format: String 'where(val).fcn1("val1").fcn2(val2)...fcnX(valX)' -> Array of Arrays [["where", val], ["fcn1", val1], ..., ["fcnX", valX]] */
 	function parser(cmdText) { return String(cmdText).replace(/\)$/, "").split(/\)\./g).map(parseWord); } 
 	/** executes `where(val).fcn1("val1").fcn2(val2)...fcnX(valX)` for functions & values in list */
-	function execList(p) { p[0][0]='where'; var i, obj=GLOBALS, len=p.length; for(i=0;i<len;++i) { obj=obj[p[i][0]](p[i][1]); }; return obj; } 
+	function execList(p) { var i, obj=where, len=p.length; for(i=0;i<len;++i) { obj=obj[p[i][0]](p[i][1]); }; return obj; } 
 	
 	/** 
 	 * Convert from parse-where Query String to a WhereClause object. Or just eval it if it starts with where('v')... 
@@ -154,7 +155,10 @@
 	 */
 	function parseWhere(cmdText) { return execList(parser(cmdText)); } // or just eval it
 
-	var where = function(k) { return new WhereClause(k); };
+	var where = function where(k) { return new WhereClause(k); };
+	where.select = function (fields) { where.fields=fields; where.selector = selector.apply(arguments); return this; }
+	where.from = function (table, whereK, cb) { where.table=table; return new QueryConstraint(); }
+	QueryConstraint.prototype.where = where.where = where;
 
 	GLOBALS.where = where;
 	GLOBALS['fromSQL'] = fromSQL;
