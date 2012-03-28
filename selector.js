@@ -71,4 +71,8 @@ function selectFields(fields, table, whereK, cb) {
 	return getter(table + (whereK || ""), getFields);
 }
 
-if ("undefined" !== typeof $ && "undefined" !== typeof $.parse) { $.parse.select = selectFields; getter = $.parse.get; }
+// For use with jQuery-Parse
+if ("undefined" !== typeof $ && "undefined" !== typeof $.parse) { $.parse.select = selectFields; getter = $.parse.get; } else { getter = parse.get }
+
+// nodejs
+if ("undefined" !== typeof module) { module.exports = selectFields; }
