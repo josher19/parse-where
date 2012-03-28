@@ -53,10 +53,10 @@
         warn(arguments);
     }
     
-    function defaultCallback(error, response, body) {
-		    if (error) console.warn(error);
-            if (!error && response.statusCode == 200) {
-                console.log(body) // Print the web page response
+    function defaultCallback(err, response, body) {
+            if (err) console.warn(err);
+            if (!err && response.statusCode == 200) {
+                console.log(null != body ? body : response) // Print the web page response
             }
     }
     

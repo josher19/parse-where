@@ -24,16 +24,16 @@ function selector(fields, fn, gotdata) {
         return _allresults;
     }
     if (fields.length === 1) { // String "score" --> flat Array : [score1, score2, score3, ...]
-        return function(data) { return $.map(_allresults(data), function(it,n) { return it[fields[0]]; }); };         
+        return function(data) { return _allresults(data).map(function(it,n) { return it[fields[0]]; }); };         
     } 
     if (fields.map) { // Array : ["score","objectId"] ==> Array of Arrays : [ [score1, id1], [score2, id2], ...]
         return function(data) { 
-            return _allresults(data).map( function(d,n) { return $.map(fields, function(attr) {return d[attr];}); });         
+            return _allresults(data).map( function(d,n) { return fields.map(function(attr) {return d[attr];}); });
         }; 
     }
     if ("object" === typeof fields) { // Object {"score":1,"objectId":1} ==> Array of Objects : [{score:score1, objectId:id1}, {score:score2, objectId:id2} ...]
         return function(data) { 
-            return $.map(_allresults(data), function(d) { 
+            return _allresults(data).map(function(d) { 
                 obj = {};
                 for(key in fields) {
                     if (fields.hasOwnProperty(key)) {
@@ -72,7 +72,11 @@ function selectFields(fields, table, whereK, cb) {
 }
 
 // For use with jQuery-Parse
-if ("undefined" !== typeof $ && "undefined" !== typeof $.parse) { $.parse.select = selectFields; getter = $.parse.get; } else { getter = parse.get }
+if ("undefined" !== typeof $ && "undefined" !== typeof $.parse) { 
+   $.parse.select = selectFields; getter = $.parse.get; 
+} else { 
+   if ("undefined" !== typeof require) { getter = require('./node/node-parse').get } 
+}
 
 // nodejs
 if ("undefined" !== typeof module) { module.exports = selectFields; }
