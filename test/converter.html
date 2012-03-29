@@ -1,0 +1,126 @@
+<!doctype html>
+<!--[if lt IE 7]> <html class="no-js ie6 oldie" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js ie7 oldie" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js ie8 oldie" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+  <title>Convert SQL to a Query String for sending to parse.com</title>
+  <meta name="description" content="">
+  <meta name="author" content="Joshua S. Weinstein">
+
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+  <!-- CSS concatenated and minified via ant build script-->
+  <link rel="stylesheet" href="css/style.css">
+  <!-- end CSS-->
+
+  <script src="js/libs/modernizr-2.0.6.min.js"></script>
+  <script src="../parse-where.js"></script>
+</head>
+
+<body>
+
+  <div id="container">
+    <header>
+
+<h3>Convert SQL to a Query String for sending to parse.com</h3>
+
+    </header>
+    <div id="main" role="main">
+
+
+<form name="parser">
+<fieldset><legend>Parse Where Parser</legend>
+
+<div class="fieldcontain">
+<label for="sql">SQL Select or Where Clause:</label><br />
+<textarea rows=6 cols=40 name="sql" id="sql" />
+</textarea>
+</div>
+
+
+<div class="fieldcontain">
+&rarr; <label for="parsewhere">Parse-Where Function chain:</label><br />
+<input type="text" name="parsewhere" id="parsewhere" size=36 />
+</div>
+
+<div class="fieldcontain">
+&rarr; <label for="parsequery">Query String to send to Parse.com:</label><br />
+<input type="text" name="parsequery" id="parsequery"  size=36 />
+</div>
+
+<div class="fieldcontain">
+	<span id="URL" >&nbsp;</span>
+</div>
+
+<input type="button" name="parse" value="Parse" />
+
+</fieldset>
+
+<h3>Description:</h3>
+This form takes a subset of standard SQL (without "OR" or "GROUP BY") and converts it to a Query String to send to parse.com
+by using the Parse-Where Javascript Utility.
+</form>
+
+
+<h3>Tests:</h3>
+
+<textarea id=test1 class=test1 rows=4 cols=30>
+SELECT * FROM GameScore
+WHERE key3 = val3 AND k1>1000 and k1<2000 AND k4>=3 AND k5 = 3000 AND k6 NOT IN [1,2,3,4] AND k7 NOT EXISTS AND k8 BETWEEN 10 and 100
+</textarea>
+
+<textarea id=test1 class=test1 rows=4 cols=30>
+SELECT * FROM GameScore
+WHERE key3 = val3 
+LIMIT 100, 500
+</textarea>
+
+SELECT * FROM GameScore 
+LIMIT 100, 500
+
+    </div>
+    <footer>
+
+    </footer>
+  </div> <!--! end of #container -->
+
+<script>
+function fixSize(t) { t.size = Math.max(t.size||0, t.value.length); }
+
+var base = {url: "http://parse.com/1/classes/", table: "TABLE"};
+var els=document.parser.elements;
+
+function fromSelect(v) {
+	return String(v).replace(/\n/g, " ").replace(/^SELECT\s+(.*)\s+FROM\s+(\w+)/i, 'select("$1").from("$2"').replace(/\s*WHERE\s+(.*?)\)/i, 'where("$1")').replace(/"where\(/,'").where(');
+}
+
+function updateSQL(ev) {
+	els.parsewhere.value= fromSQL( els.sql.value );
+	els.parsewhere.value= fromSelect(els.parsewhere.value);
+	fixSize(els.parsewhere);
+	updateWhere(ev);
+}
+	
+function updateWhere(ev) {	
+	els.parsequery.value = "ERROR";
+	els.parsequery.value = parseWhereQuery(els.parsewhere.value)
+	fixSize(els.parsequery)
+	var query = base.url + (where.table || base.table) + els.parsequery.value;
+	document.getElementById('URL').innerHTML = query.link(query)
+	return true;
+}
+els.sql.onchange = updateSQL;
+els.parsewhere.onchange = updateWhere;
+
+</script>
+  
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+  <script>window.jQuery || document.write('<script src="js/libs/jquery-1.6.2.min.js"><\/script>')</script>
+  <script src="../selector.js"></script>
+
+</html></body>
+
