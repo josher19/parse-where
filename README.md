@@ -16,6 +16,12 @@ which gets converted to (using `eval` or `parseWhereQuery`):
 
 for passing to $.parse.get
 
+## Requirements
+
+* Client Side: jQuery and jQuery-Parse
+    _~ OR ~_
+* Server Side: NodeJS
+
 ## Other Operators
 
 <pre>
@@ -50,6 +56,8 @@ Note this must be appended to the Query String (1st argument of $.parse.get) rat
 
 ### Usage:
 
+```javascript
+
     whereQ=where("score").exists();
     whereQ.toString(1) === '{"score":{"$exists":true}}';
     whereQ.toString() === '?where={"score":{"$exists":true}}';
@@ -59,6 +67,8 @@ Note this must be appended to the Query String (1st argument of $.parse.get) rat
     whereLimit=where("score").exists().order("score").desc().limit(10).count();
      $.parse.get('GameScore', whereLimit, callback);  // NOT OK!
      $.parse.get('GameScore' + whereLimit, callback);  // ok
+
+```
 
 ## Summary
 
