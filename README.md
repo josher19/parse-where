@@ -4,17 +4,26 @@ Use functions to create a "where" object that can be used for parse.com.
 
 Starting with a SQL string:
 
+```SQL
     WHERE key1 <= value AND key1 > value2 AND key3=value3
+```
 
 gets parsed into (using `fromSQL`):
 
+```javascript
     where("key1").lte("value").and("key1").gt("value2").and("key3").equals("value3")
+```
 
-which gets converted to (using `eval` or `parseWhereQuery`):
+which gets converted to (using `parseWhereQuery` or evil `eval`):
 
 	?where={"key1":{"$lte":value,"$gt":value2},"key3":value3}
 
 for passing to $.parse.get
+
+## Requirements
+
+* Client Side: jQuery and jQuery-Parse    
+* _~ OR ~_ Server Side: NodeJS
 
 ## Other Operators
 
@@ -50,6 +59,8 @@ Note this must be appended to the Query String (1st argument of $.parse.get) rat
 
 ### Usage:
 
+```javascript
+
     whereQ=where("score").exists();
     whereQ.toString(1) === '{"score":{"$exists":true}}';
     whereQ.toString() === '?where={"score":{"$exists":true}}';
@@ -59,6 +70,8 @@ Note this must be appended to the Query String (1st argument of $.parse.get) rat
     whereLimit=where("score").exists().order("score").desc().limit(10).count();
      $.parse.get('GameScore', whereLimit, callback);  // NOT OK!
      $.parse.get('GameScore' + whereLimit, callback);  // ok
+
+```
 
 ## Summary
 

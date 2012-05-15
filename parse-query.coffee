@@ -12,7 +12,7 @@
         if table
             @from(table,whereC) 
         else 
-            @
+            this
     from : (table,whereC) ->
         (cb) =>
             if require?
@@ -24,4 +24,4 @@
                 $.parse.get(table, whereC, wrapcb)
             else
                 console?.warn "requires jQuery.parse or node-parse"
-                @
+                this
