@@ -1,0 +1,166 @@
+<!doctype html>
+<!-- The Time Machine GitHub pages theme was designed and developed by Jon Rohan, on Feb 7, 2012. -->
+<!-- Follow him for fun. http://twitter.com/jonrohan. Tail his code on http://github.com/jonrohan -->
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+  <link rel="stylesheet" href="stylesheets/stylesheet.css" media="screen"/>
+  <link rel="stylesheet" href="stylesheets/pygment_trac.css"/>
+  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+  <script type="text/javascript" src="javascripts/script.js"></script>
+
+  <title>Parse-where</title>
+  <meta name="description" content="Use functions to create a &quot;where&quot; object that can be used for parse.com">
+
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+</head>
+
+<body>
+
+  <div class="wrapper">
+    <header>
+      <h1 class="title">Parse-where</h1>
+    </header>
+    <div id="container">
+      <p class="tagline">Use functions to create a &quot;where&quot; object that can be used for parse.com</p>
+      <div id="main" role="main">
+        <div class="download-bar">
+        <div class="inner">
+          <a href="https://github.com/josher19/parse-where/tarball/master" class="download-button tar"><span>Download</span></a>
+          <a href="https://github.com/josher19/parse-where/zipball/master" class="download-button zip"><span>Download</span></a>
+          <a href="https://github.com/josher19/parse-where" class="code">View Parse-where on GitHub</a>
+        </div>
+        <span class="blc"></span><span class="trc"></span>
+        </div>
+        <article class="markdown-body">
+          <h1>parse-where</h1>
+
+<p>Use functions to create a "where" object that can be used for parse.com.</p>
+
+<p>Starting with a SQL string:</p>
+
+<div class="highlight">
+<pre><span class="k">WHERE</span> <span class="n">key1</span> <span class="o">&lt;=</span> <span class="n">value</span> <span class="k">AND</span> <span class="n">key1</span> <span class="o">&gt;</span> <span class="n">value2</span> <span class="k">AND</span> <span class="n">key3</span><span class="o">=</span><span class="n">value3</span>
+</pre>
+</div>
+
+
+<p>gets parsed into (using <code>fromSQL</code>):</p>
+
+<div class="highlight">
+<pre><span class="nx">where</span><span class="p">(</span><span class="s2">"key1"</span><span class="p">).</span><span class="nx">lte</span><span class="p">(</span><span class="s2">"value"</span><span class="p">).</span><span class="nx">and</span><span class="p">(</span><span class="s2">"key1"</span><span class="p">).</span><span class="nx">gt</span><span class="p">(</span><span class="s2">"value2"</span><span class="p">).</span><span class="nx">and</span><span class="p">(</span><span class="s2">"key3"</span><span class="p">).</span><span class="nx">equals</span><span class="p">(</span><span class="s2">"value3"</span><span class="p">)</span>
+</pre>
+</div>
+
+
+<p>which gets converted to (using <code>parseWhereQuery</code> or evil <code>eval</code>):</p>
+
+<pre><code>?where={"key1":{"$lte":value,"$gt":value2},"key3":value3}
+</code></pre>
+
+<p>for passing to $.parse.get</p>
+
+<h2>Requirements</h2>
+
+<ul>
+<li>Client Side: jQuery and jQuery-Parse<br>
+</li>
+<li>
+<em>~ OR ~</em> Server Side: NodeJS</li>
+</ul><h2>Other Operators</h2>
+
+<pre>
+$op     Name
+===     ====
+:       Equal To
+$lt     Less Than
+$lte    Less Than Or Equal To
+$gt     Greater Than
+$gte    Greater Than Or Equal To
+$ne     Not Equal To
+$in     Contained In
+$nin    Not Contained in
+$exists A value is set for the key
+$regex  Regular Expressions
+</pre>
+
+<p>For functional notation, remove the '$'. </p>
+
+<p>SQL: "WHERE x &gt; 100" </p>
+
+<ul>
+<li>becomes <strong>Where Function Chain</strong>: where('x').gt(100) </li>
+<li>becomes <strong>WhereClause Object</strong>: {"x":{"$gt":100}} </li>
+<li>becomes <strong>Query String</strong>: '?where={"x":{"$gt":100}}'</li>
+</ul><h2>Query Constraints</h2>
+
+<p>Additional query constraints that can be given at the end of the the Where Clause: <code>limit skip order include count</code>.</p>
+
+<p>Also, <code>desc</code> can be given after <code>order</code>. So <code>order('x').desc()</code> becomes '&amp;limit=-x' appended to the Query String.
+Note this must be appended to the Query String (1st argument of $.parse.get) rather sent as an object (2nd argument of $.parse.get)</p>
+
+<h3>Usage:</h3>
+
+<div class="highlight">
+<pre>
+<span class="nx">whereQ</span><span class="o">=</span><span class="nx">where</span><span class="p">(</span><span class="s2">"score"</span><span class="p">).</span><span class="nx">exists</span><span class="p">();</span>
+<span class="nx">whereQ</span><span class="p">.</span><span class="nx">toString</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">===</span> <span class="s1">'{"score":{"$exists":true}}'</span><span class="p">;</span>
+<span class="nx">whereQ</span><span class="p">.</span><span class="nx">toString</span><span class="p">()</span> <span class="o">===</span> <span class="s1">'?where={"score":{"$exists":true}}'</span><span class="p">;</span>
+<span class="nx">$</span><span class="p">.</span><span class="nx">parse</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">'GameScore'</span><span class="p">,</span> <span class="nx">whereQ</span><span class="p">,</span> <span class="nx">callback</span><span class="p">);</span>  <span class="c1">// ok</span>
+<span class="nx">$</span><span class="p">.</span><span class="nx">parse</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">'GameScore'</span> <span class="o">+</span> <span class="nx">whereQ</span><span class="p">,</span> <span class="nx">callback</span><span class="p">);</span> <span class="c1">// better</span>
+
+<span class="nx">whereLimit</span><span class="o">=</span><span class="nx">where</span><span class="p">(</span><span class="s2">"score"</span><span class="p">).</span><span class="nx">exists</span><span class="p">().</span><span class="nx">order</span><span class="p">(</span><span class="s2">"score"</span><span class="p">).</span><span class="nx">desc</span><span class="p">().</span><span class="nx">limit</span><span class="p">(</span><span class="mi">10</span><span class="p">).</span><span class="nx">count</span><span class="p">();</span>
+<span class="nx">$</span><span class="p">.</span><span class="nx">parse</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">'GameScore'</span><span class="p">,</span> <span class="nx">whereLimit</span><span class="p">,</span> <span class="nx">callback</span><span class="p">);</span>  <span class="c1">// NOT OK!</span>
+<span class="nx">$</span><span class="p">.</span><span class="nx">parse</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">'GameScore'</span> <span class="o">+</span> <span class="nx">whereLimit</span><span class="p">,</span> <span class="nx">callback</span><span class="p">);</span>  <span class="c1">// ok</span>
+
+</pre>
+</div>
+
+
+<h2>Summary</h2>
+
+<p>Use functions to create "where" objects to send to the parse.com server.
+Can also convert to and from a subset of SQL. Sorry, no "<em>OR</em>" or "<em>GROUP BY</em>"!</p>
+
+<h2>NOTE</h2>
+
+<p>This <a href="https://github.com/josher19/parse-where/">repo</a> was created <strong>before</strong> parse.com came out with their new 
+<a href="https://www.parse.com/docs/js_guide">Javascript Guide</a>.</p>
+
+<p>Definitely worth looking at, especially if you are a Backbone.js fan or 
+want to do User Signup &amp; Login, though there are currently 
+some <a href="https://github.com/josher19/parse-where/wiki/Parse.com-Javascript-Guide">typos and errors</a> in the sample code.</p>
+        </article>
+      </div>
+    </div>
+    <footer>
+      <div class="owner">
+      <p><a href="https://github.com/josher19" class="avatar"><img src="https://secure.gravatar.com/avatar/4eb99d3a7464f9c5abd893161f3b2103?s=30&amp;d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-140.png" width="48" height="48"/></a> <a href="https://github.com/josher19">josher19</a> maintains <a href="https://github.com/josher19/parse-where">Parse-where</a></p>
+      </div>
+      <div class="creds">
+        <small>This page generated using <a href="https://pages.github.com/">GitHub Pages</a><br/>theme by <a href="http://twitter.com/jonrohan/">Jon Rohan</a></small>
+      </div>
+    </footer>
+  </div>
+  <div class="current-section">
+    <a href="#top">Scroll to top</a>
+    <a href="https://github.com/josher19/parse-where/tarball/master" class="tar">tar</a><a href="https://github.com/josher19/parse-where/zipball/master" class="zip">zip</a><a href="" class="code">source code</a>
+    <p class="name"></p>
+  </div>
+
+            <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-26487682-2");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
+</body>
+</html>
