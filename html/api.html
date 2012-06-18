@@ -1,0 +1,1481 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <title>JavaScript Developer Guide | Parse</title>
+    <base href="https://parse.com/docs/js_guide" />
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:600italic,400,600,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Raleway:100' rel='stylesheet' type='text/css'>
+    <link href="/assets/main.css?5ec20cd" media="screen" rel="stylesheet" type="text/css" />
+    <!--[if lt IE 8]>
+        <link rel="stylesheet" type="text/css" href="/stylesheets/ie7.css" />
+    <![endif]-->
+    <link rel="stylesheet" media="screen and (max-device-width: 1024px), screen and (-webkit-min-device-pixel-ratio: 2)" href="/stylesheets/ipad.css" />
+    <script>
+        var App = {};
+    </script>
+    <script src="/assets/main.js?5ec20cd" type="text/javascript"></script>
+    
+    <meta name="csrf-param" content="authenticity_token"/>
+<meta name="csrf-token" content="vKNhSZVU6n8eXuU0I3p&#47;7DaEpbGVcxr1cXclevG8XK4="/>
+    <meta name="description" content="Parse is a complete technology stack to power your mobile app's backend." />
+    <meta name="keywords" content="backend, mobile, development, server, code" />
+    <meta property="fb:app_id" content="361736430535656" /> 
+    <meta property="og:type" content="website" /> 
+    <meta property="og:title" content="Parse" /> 
+    <meta property="og:image" content="https://parse.com/images/home/box.png" /> 
+    <meta property="og:description" content="Parse is a complete technology stack to power your mobile app's backend." /> 
+    <meta property="og:url" content="http://www.parse.com">
+
+    
+
+    <script type="text/javascript">var _sf_startpt=(new Date()).getTime()</script>
+
+    <!-- start Mixpanel --><script type="text/javascript">var mpq=[];mpq.push(["init","939d1255aebe279c8a20b6d5009fc8d7"]);(function(){var b,a,e,d,c;b=document.createElement("script");b.type="text/javascript";b.async=true;b.src=(document.location.protocol==="https:"?"https:":"http:")+"//api.mixpanel.com/site_media/js/api/mixpanel.js";a=document.getElementsByTagName("script")[0];a.parentNode.insertBefore(b,a);e=function(f){return function(){mpq.push([f].concat(Array.prototype.slice.call(arguments,0)))}};d=["init","track","track_links","track_forms","register","register_once","identify","name_tag","set_config"];for(c=0;c<d.length;c++){mpq[d[c]]=e(d[c])}})();
+</script><!-- end Mixpanel -->
+</head>
+
+
+    <body class="p_docs p_docs_js_guide  user_logged_in">
+          <div id="header">
+    <div class="inner">
+        <a href="/jobs" class="hiring">We're hiring!</a>
+
+            <div class="login_container logged_in">
+        <div class="header_login">josher19@users.sf.net</div>
+        <div class="login_dropdown_logged_in">
+            <div class="username">josher19@users.sf.net</div>
+            <ul>
+                <li><img alt="Settings" src="/images/header/settings.png?5ec20cd" /> <a href="https://parse.com/apps">Your Apps</a></li>
+                <li><img alt="Settings" src="/images/header/settings.png?5ec20cd" /> <a href="https://parse.com/account">Account</a></li>
+                <li><img alt="Logout" src="/images/header/logout.png?5ec20cd" /> <a href="https://parse.com/user_session" data-method="delete" rel="nofollow">Log Out</a></li>
+            </ul>
+        </div>
+    </div>
+
+
+        <a class="logo" href="https://parse.com/"></a>
+            <ul class="main_menu">
+
+                    <li class="dropdown_container ">
+                        <a href="https://parse.com/apps" class=" dropdown_selector">
+                            <span class="menu_inner">
+                                Your Apps
+                                <span class="arrow"></span>
+                            </span>
+                        </a>
+
+                        <div class="dropdown" style="display:none">
+                            <ul>
+                                    <li><a href="https://parse.com/apps/greasemonkey">GreaseMonkey</a></li>
+                                    <li><a href="https://parse.com/apps/ld">LD</a></li>
+                                    <li><a href="https://parse.com/apps/parsewhere">ParseWhere</a></li>
+                                <li class="create"><a href="https://parse.com/apps/new">Create App...</a></li>
+                            </ul>
+                        </div>
+                    </li>
+
+
+                    <li class="active"><a href="/docs"><span class='menu_inner'>Docs</span></a></li>
+                    <li><a href="https://parse.com/apps/quickstart"><span class='menu_inner'>Quick Start</span></a></li>
+                    <li><a href="/plans"><span class='menu_inner'>Pricing</span></a></li>
+                    <li><a href="/help"><span class='menu_inner'>Help</span></a></li>
+                
+                <li><a href="http://blog.parse.com"><span class='menu_inner'>Blog</span></a></li>
+            </ul>
+            <div class="clear"></div>
+    </div>
+</div>
+
+
+        
+
+        <div class="container">
+            
+                  <div class="doc_columns scrollable">
+      <div class="menu_column">
+	       <div class="shim">&nbsp;</div>
+
+<div class="menu">
+
+  <form class="swiftype">
+    <input type="text" id="st-search-input" class="st-search-input"  tabindex="100" />
+</form>
+
+
+
+  <ul>
+    <li class=""><a href="/docs">Overview</a></li>
+
+      <li class=""><a href="/docs/ios_guide">iOS Guide</a></li>
+    
+    <li class=""><a href="/docs/ios/api/">iOS API  <img src='/images/docs/outside.png' /></a></li>
+
+      <li class=""><a href="/docs/android_guide">Android Guide</a></li>
+
+      <li class=""><a href="/docs/android/api/?com/parse/ParseObject.html">Android API <img src='/images/docs/outside.png' /></a></li>
+
+       </ul><div class="wrapper">
+  <h2>JavaScript Guide</h2>
+
+  <ul>
+    <li data-section="objects" class="major"><strong class="first"><a href="#objects">Objects</a></strong>
+      <ul>
+        <li><a href="#objects-classes">Parse.Object</a></li>
+        <li><a href="#objects-saving">Saving Objects</a></li>
+        <li><a href="#objects-retrieving">Retrieving Objects</a></li>
+        <li><a href="#objects-updating">Updating Objects</a></li>
+        <li><a href="#objects-deleting">Deleting Objects</a></li>
+        <li><a href="#objects-pointers">Relational Data</a></li>
+        <li><a href="#objects-types">Data Types</a></li>
+      </ul>
+    </li>
+    <li data-section="queries" class="major"><strong><a href="#queries">Queries</a></strong>
+      <ul>
+        <li><a href="#queries-basic">Basic Queries</a></li>
+        <li><a href="#queries-constraints">Query Constraints</a></li>
+        <li><a href="#queries-arrays">Queries on Array Values</a></li>
+        <li><a href="#queries-strings">Queries on String Values</a></li>
+        <li><a href="#queries-relational">Relational Queries</a></li>
+        <li><a href="#queries-counting">Counting Objects</a></li>
+      </ul>
+      </li>
+    <li data-section="collections" class="major"><strong><a href="#collections">Collections</a></strong>
+      <ul>
+        <li><a href="#collections-extend">Creating Collections</a></li>
+        <li><a href="#collections-fetch">Retrieving Collections</a></li>
+        <li><a href="#collections-comparator">Sorting Collections</a></li>
+        <li><a href="#collections-modifying">Modifying a Collection</a></li>
+      </ul>
+    </li>
+    <li data-section="users" class="major"><strong><a href="#users">Users</a></strong>
+      <ul>
+        <li><a href="#users-props">Properties</a></li>
+        <li><a href="#users-signup">Signing Up</a></li>
+        <li><a href="#users-login">Logging In</a></li>
+        <li><a href="#users-email-verification">Verifying Emails</a></li>
+        <li><a href="#users-current">Current User</a></li>        
+        <li><a href="#users-security">Security For User Objects</a></li>
+        <li><a href="#users-acls">Security For Other Objects</a></li>
+        <li><a href="#users-resetting">Resetting Passwords</a></li>
+        <li><a href="#users-querying">Querying</a></li>
+        <li><a href="#users-associations">Associations</a></li>
+        <li><a href="#users-browser">Users in the Data Browser</a></li>
+      </ul>
+    </li>
+    <li data-section="roles" class="major"><strong><a href="#roles">Roles</a></strong>
+      <ul>
+        <li><a href="#roles-props">Properties</a></li>
+        <li><a href="#roles-security">Security for Role Objects</a></li>
+        <li><a href="#roles-acls">Security for Other Objects</a></li>
+        <li><a href="#roles-hierarchy">Role Hierarchy</a></li>
+        <li><a href="#roles-quotas">Role Quotas</a></li>
+      </ul>
+    </li>
+    <li data-section="geo" class="major"><strong><a href="#geo">GeoPoints</a></strong>
+      <ul>
+        <li><a href="#geo-classes">Parse.GeoPoint</a></li>
+        <li><a href="#geo-query">Geo Queries</a></li>
+        <li><a href="#geo-limitations">Caveats</a></li>
+      </ul>
+    </li>
+    <li data-section="views" class="major"><strong><a href="#views">Views</a></strong></li>
+    <li data-section="views" class="major"><strong><a href="#convert">Converting Backbone Apps</a></strong></li>
+    <li data-section="errors" class="major"><strong><a href="#errors">Handling Errors</a></strong></li>
+  </ul>
+</div>
+<ul>
+
+    <li class=""><a href="/docs/js/">JavaScript API  <img src='/images/docs/outside.png' /></a></li>
+
+      <li class=""><a href="/docs/rest">REST API</a></li>
+
+    <li class=""><a href="/docs/downloads">Downloads</a></li>
+
+    <li class=""><a href="/docs/api_libraries">API Libraries</a></li>
+
+    <li><a href="/samples">Sample Apps</a></li>
+    
+      <li><a href="/docs/tutorials">Tutorials</a></li>
+
+      <li class=""><a href="/docs/data">Data & Security</a></li>
+  </ul>
+</div>
+
+      </div>
+      <div class="content_column">
+	<div class="content">
+
+            
+            
+<h1>JavaScript Guide</h1>
+
+
+
+    <p>If you haven't set up your project yet, please <a href="https://parse.com/apps/quickstart">head over to the QuickStart guide</a> to get up and running.</p>
+
+    <h2>Introduction</h2>
+
+    <p>The Parse platform provides a complete backend solution for your mobile application. Our goal is to totally eliminate the need for writing server code or maintaining servers.</p>
+
+    <p>Our JavaScript SDK is based on the popular <a href="http://documentcloud.github.com/backbone/">Backbone.js</a> framework. It is compatible with existing Backbone applications with minimal changes on your part. Our goal is to minimize configuration and let you quickly start building your JavaScript and HTML5 app on Parse.</p>
+    
+    <h3>Apps</h3>
+    
+    <p>On Parse, you create an App for each of your mobile applications. Each App has its own application id and JavaScript client key that you apply to your web app. Your account on Parse can accommodate multiple Apps. This is useful even if you have one application, since you can deploy different versions for test and production.</p>
+
+    <h3>Dependencies</h3>
+
+    <p>Our JavaScript SDK does not require any external libraries. The only exception is the <code>Parse.View</code> class, which requires that you provide jQuery or a jQuery compatible <code>$</code> method.</p>
+    
+    <a href="#" name="objects"></a><a href="#" class="section section_major" name="objects_anchor"></a>
+    <h2>Objects</h2>
+
+    <a href="#" name="objects-classes"></a><a href="#" class="section section_minor" name="objects-classes_anchor"></a>
+    <h3>Parse.Object</h3>
+    
+    <p>Storing data on Parse is built around <code>Parse.Object</code>. Each <code>Parse.Object</code> contains key-value pairs of JSON-compatible data. This data is schemaless, which means that you don't need to specify ahead of time what keys exist on each <code>Parse.Object</code>. You simply set whatever key-value pairs you want, and our backend will store it.</p>
+    
+    <p>For example, let's say you're tracking high scores for a game. A single <code>Parse.Object</code> could contain:</p>
+
+    <div class="code javascript"><pre><span class="nx">score</span><span class="o">:</span> <span class="mi">1337</span><span class="p">,</span> <span class="nx">playerName</span><span class="o">:</span> <span class="s2">&quot;Sean Plott&quot;</span><span class="p">,</span> <span class="nx">cheatMode</span><span class="o">:</span> <span class="kc">false</span></pre></div>    
+    <p>Keys must be alphanumeric strings. Values can be strings, numbers, booleans, or even arrays and dictionaries - anything that can be JSON-encoded.</p>
+
+    <p>Each <code>Parse.Object</code> is an instance of a specific subclass with a class name that you can use to distinguish different sorts of data. For example, we could call the high score object a <code>GameScore</code>. We recommend that you NameYourClassesLikeThis and nameYourKeysLikeThis, just to keep your code looking pretty.</p>
+
+    <p>To create a new subclass, use the <code>Parse.Object.extend</code> method.  Any <code>Parse.Query</code> will return instances of the new class for any <code>Parse.Object</code> with the same classname.  If you're familiar with <code>Backbone.Model</code>, then you already know how to use <code>Parse.Object</code>.  It's designed to be a drop-in replacement.</p>
+
+    <div class="code javascript"><pre><span class="c1">// Simple syntax to create a new subclass of Parse.Object.</span>
+<span class="kd">var</span> <span class="nx">GameScore</span> <span class="o">=</span> <span class="nx">Parse</span><span class="p">.</span><span class="nb">Object</span><span class="p">.</span><span class="nx">extend</span><span class="p">(</span><span class="s2">&quot;GameScore&quot;</span><span class="p">);</span>
+
+<span class="c1">// Create a new instance of that class.</span>
+<span class="kd">var</span> <span class="nx">gameScore</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">GameScore</span><span class="p">();</span>
+
+<span class="c1">// Alternatively, you can use the typical Backbone syntax.</span>
+<span class="kd">var</span> <span class="nx">Achievement</span> <span class="o">=</span> <span class="nx">Parse</span><span class="p">.</span><span class="nb">Object</span><span class="p">.</span><span class="nx">extend</span><span class="p">({</span>
+  <span class="nx">className</span><span class="o">:</span> <span class="s2">&quot;Achievement&quot;</span>
+<span class="p">});</span></pre></div>
+    <p>You can add additional methods to your subclasses of <code>Parse.Object</code>.</p>
+
+    <div class="code javascript"><pre><span class="c1">// A complex subclass of Parse.Object</span>
+<span class="kd">var</span> <span class="nx">Monster</span> <span class="o">=</span> <span class="nx">Parse</span><span class="p">.</span><span class="nb">Object</span><span class="p">.</span><span class="nx">extend</span><span class="p">(</span><span class="s2">&quot;Monster&quot;</span><span class="p">,</span> <span class="p">{</span>
+  <span class="c1">// Class methods</span>
+  <span class="nx">spawn</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">strength</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">monster</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Monster</span><span class="p">();</span>
+    <span class="nx">monster</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="s2">&quot;strength&quot;</span><span class="p">,</span> <span class="nx">strength</span><span class="p">);</span>
+    <span class="k">return</span> <span class="nx">monster</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">},</span> <span class="p">{</span>
+  <span class="c1">// Instance methods</span>
+  <span class="nx">strength</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s2">&quot;strength&quot;</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">});</span>
+
+<span class="kd">var</span> <span class="nx">monster</span> <span class="o">=</span> <span class="nx">Monster</span><span class="p">.</span><span class="nx">spawn</span><span class="p">(</span><span class="mi">200</span><span class="p">);</span>
+<span class="nx">alert</span><span class="p">(</span><span class="nx">monster</span><span class="p">.</span><span class="nx">strength</span><span class="p">());</span>  <span class="c1">// Displays 200.</span></pre></div>
+    <a href="#" name="objects-saving"></a><a href="#" class="section section_minor" name="objects-saving_anchor"></a>
+    <h3>Saving Objects</h3>
+    
+    <p>Let's say you want to save the <code>GameScore</code> described above to the server. The interface is similar to a <code>Backbone.Model</code>, including the <code>save</code> method:</p>
+    
+    <div class="code objective-c"><pre><span class="n">var</span> <span class="n">GameScore</span> <span class="o">=</span> <span class="n">Parse</span><span class="p">.</span><span class="n">Object</span><span class="p">.</span><span class="n">extend</span><span class="p">(</span><span class="s">&quot;GameScore&quot;</span><span class="p">);</span>
+<span class="n">var</span> <span class="n">gameScore</span> <span class="o">=</span> <span class="n">new</span> <span class="n">GameScore</span><span class="p">();</span>
+
+<span class="n">gameScore</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="s">&quot;score&quot;</span><span class="p">,</span> <span class="mi">1337</span><span class="p">);</span>
+<span class="n">gameScore</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="s">&quot;playerName&quot;</span><span class="p">,</span> <span class="s">&quot;Sean Plott&quot;</span><span class="p">);</span>
+<span class="n">gameScore</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="s">&quot;cheatMode&quot;</span><span class="p">,</span> <span class="n">false</span><span class="p">);</span>
+
+<span class="n">gameScore</span><span class="p">.</span><span class="n">save</span><span class="p">(</span><span class="n">null</span><span class="p">,</span> <span class="p">{</span>
+  <span class="nl">success:</span> <span class="n">function</span><span class="p">(</span><span class="n">gameScore</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// The object was saved successfully.</span>
+  <span class="p">},</span>
+  <span class="nl">error:</span> <span class="n">function</span><span class="p">(</span><span class="n">gameScore</span><span class="p">,</span> <span class="n">error</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// The save failed.</span>
+    <span class="c1">// error is a Parse.Error with an error code and description.</span>
+  <span class="p">}</span>
+<span class="p">});</span></pre></div>    
+    <p>After this code runs, you will probably be wondering if anything really happened. To make sure the data was saved, you can look at the Data Browser in your app on Parse. You should see something like this:</p>
+    
+    <div class="code objective-c"><pre><span class="nl">objectId:</span> <span class="s">&quot;xWMyZ4YEGZ&quot;</span><span class="p">,</span> <span class="nl">score:</span> <span class="mi">1337</span><span class="p">,</span> <span class="nl">playerName:</span> <span class="s">&quot;Sean Plott&quot;</span><span class="p">,</span> <span class="nl">cheatMode:</span> <span class="n">false</span><span class="p">,</span>
+<span class="nl">createdAt:</span><span class="s">&quot;2011-06-10T18:33:42Z&quot;</span><span class="p">,</span> <span class="nl">updatedAt:</span><span class="s">&quot;2011-06-10T18:33:42Z&quot;</span></pre></div>    
+    <p>There are two things to note here. You didn't have to configure or set up a new Class called <code>GameScore</code> before running this code. Your Parse app lazily creates this Class for you when it first encounters it.</p>
+    
+    <p>There are also a few fields you don't need to specify that are provided as a convenience. <code>objectId</code> is a unique identifier for each saved object. <code>createdAt</code> and <code>updatedAt</code> represent the time that each object was created and last modified on the server. Each of these fields is filled in by the server, so they don't exist on a <code>Parse.Object</code> until a save operation has completed.
+
+    <p>If you prefer, you can set attributes directly in your call to <code>save</code> instead.</p>
+
+    <div class="code javascript"><pre><span class="kd">var</span> <span class="nx">GameScore</span> <span class="o">=</span> <span class="nx">Parse</span><span class="p">.</span><span class="nb">Object</span><span class="p">.</span><span class="nx">extend</span><span class="p">(</span><span class="s2">&quot;GameScore&quot;</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">gameScore</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">GameScore</span><span class="p">();</span>
+
+<span class="nx">gameScore</span><span class="p">.</span><span class="nx">save</span><span class="p">({</span>
+  <span class="nx">score</span><span class="o">:</span> <span class="mi">1337</span><span class="p">,</span>
+  <span class="nx">playerName</span><span class="o">:</span> <span class="s2">&quot;Sean Plott&quot;</span><span class="p">,</span>
+  <span class="nx">cheatMode</span><span class="o">:</span> <span class="kc">false</span>
+<span class="p">},</span> <span class="p">{</span>
+  <span class="nx">success</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">gameScore</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// The object was saved successfully.</span>
+  <span class="p">},</span>
+  <span class="nx">error</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">gameScore</span><span class="p">,</span> <span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// The save failed.</span>
+    <span class="c1">// error is a Parse.Error with an error code and description.</span>
+  <span class="p">}</span>
+<span class="p">});</span></pre></div>    
+
+    <a href="#" name="objects-retrieving"></a><a href="#" class="section section_minor" name="objects-retrieving_anchor"></a>
+    <h3>Retrieving Objects</h3>
+
+    <p>Saving data to the cloud is fun, but it's even more fun to get that data out again. If you have the <code>objectId</code>, you can retrieve the whole <code>Parse.Object</code> using a <code>Parse.Query</code>:</p>
+
+    <div class="code objective-c"><pre><span class="n">var</span> <span class="n">GameScore</span> <span class="o">=</span> <span class="n">Parse</span><span class="p">.</span><span class="n">Object</span><span class="p">.</span><span class="n">extend</span><span class="p">(</span><span class="s">&quot;GameScore&quot;</span><span class="p">);</span>
+<span class="n">var</span> <span class="n">query</span> <span class="o">=</span> <span class="n">new</span> <span class="n">Parse</span><span class="p">.</span><span class="n">Query</span><span class="p">(</span><span class="n">GameScore</span><span class="p">);</span>
+<span class="n">query</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;xWMyZ4YEGZ&quot;</span><span class="p">,</span> <span class="p">{</span>
+  <span class="nl">success:</span> <span class="n">function</span><span class="p">(</span><span class="n">gameScore</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// The object was retrieved successfully.</span>
+  <span class="p">},</span>
+  <span class="nl">error:</span> <span class="n">function</span><span class="p">(</span><span class="n">object</span><span class="p">,</span> <span class="n">error</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// The object was not retrieved successfully.</span>
+    <span class="c1">// error is a Parse.Error with an error code and description.</span>
+  <span class="p">}</span>
+<span class="p">});</span></pre></div>
+    <p>To get the values out of the <code>Parse.Object</code>, use the <code>get</code> method.</p>
+    
+    <div class="code objective-c"><pre><span class="n">var</span> <span class="n">score</span> <span class="o">=</span> <span class="n">gameScore</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;score&quot;</span><span class="p">);</span>
+<span class="n">var</span> <span class="n">playerName</span> <span class="o">=</span> <span class="n">gameScore</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;playerName&quot;</span><span class="p">);</span>
+<span class="n">var</span> <span class="n">cheatMode</span> <span class="o">=</span> <span class="n">gameScore</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;cheatMode&quot;</span><span class="p">);</span></pre></div>
+    <p>The three special values are provided as properties:</p>
+
+    <div class="code objective-c"><pre><span class="n">var</span> <span class="n">objectId</span> <span class="o">=</span> <span class="n">gameScore</span><span class="p">.</span><span class="kt">id</span><span class="p">;</span>
+<span class="n">var</span> <span class="n">updatedAt</span> <span class="o">=</span> <span class="n">gameScore</span><span class="p">.</span><span class="n">updatedAt</span><span class="p">;</span>
+<span class="n">var</span> <span class="n">createdAt</span> <span class="o">=</span> <span class="n">gameScore</span><span class="p">.</span><span class="n">createdAt</span><span class="p">;</span></pre></div>
+    <p>If you need to refresh an object you already have with the latest data that 
+    is on the server, you can call the <code>fetch</code> method like so:</p>
+
+    <div class="code objective-c"><pre><span class="n">myObject</span><span class="p">.</span><span class="n">fetch</span><span class="p">({</span>
+  <span class="nl">success:</span> <span class="n">function</span><span class="p">(</span><span class="n">myObject</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// The object was refreshed successfully.</span>
+  <span class="p">},</span>
+  <span class="nl">error:</span> <span class="n">function</span><span class="p">(</span><span class="n">myObject</span><span class="p">,</span> <span class="n">error</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// The object was not refreshed successfully.</span>
+    <span class="c1">// error is a Parse.Error with an error code and description.</span>
+  <span class="p">}</span>
+<span class="p">});</span></pre></div>
+    <a href="#" name="objects-updating"></a><a href="#" class="section section_minor" name="objects-updating_anchor"></a>
+    <h3>Updating Objects</h3>
+
+    <p>Updating an object is simple. Just set some new data on it and call one the save method. For example:</p>
+
+<div class="code objective-c"><pre><span class="c1">// Create the object.</span>
+<span class="n">var</span> <span class="n">GameScore</span> <span class="o">=</span> <span class="n">Parse</span><span class="p">.</span><span class="n">Object</span><span class="p">.</span><span class="n">extend</span><span class="p">(</span><span class="s">&quot;GameScore&quot;</span><span class="p">);</span>
+<span class="n">var</span> <span class="n">gameScore</span> <span class="o">=</span> <span class="n">new</span> <span class="n">GameScore</span><span class="p">();</span>
+
+<span class="n">gameScore</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="s">&quot;score&quot;</span><span class="p">,</span> <span class="mi">1337</span><span class="p">);</span>
+<span class="n">gameScore</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="s">&quot;playerName&quot;</span><span class="p">,</span> <span class="s">&quot;Sean Plott&quot;</span><span class="p">);</span>
+<span class="n">gameScore</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="s">&quot;cheatMode&quot;</span><span class="p">,</span> <span class="n">false</span><span class="p">);</span>
+
+<span class="n">gameScore</span><span class="p">.</span><span class="n">save</span><span class="p">(</span><span class="n">null</span><span class="p">,</span> <span class="p">{</span>
+  <span class="nl">success:</span> <span class="n">function</span><span class="p">(</span><span class="n">gameScore</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// Now let&#39;s update it with some new data. In this case, only cheatMode and score</span>
+    <span class="c1">// will get sent to the server. playerName hasn&#39;t changed.</span>
+    <span class="n">gameScore</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="s">&quot;cheatMode&quot;</span><span class="p">,</span> <span class="n">true</span><span class="p">);</span>
+    <span class="n">gameScore</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="s">&quot;score&quot;</span><span class="p">,</span> <span class="mi">1338</span><span class="p">);</span>
+    <span class="n">gameScore</span><span class="p">.</span><span class="n">save</span><span class="p">();</span>
+  <span class="p">}</span>
+<span class="p">});</span></pre></div>
+  <p>Parse automatically figures out which data has changed so only "dirty" fields will be sent up to the server. You don't need to worry about squashing data on the server that you didn't intend to update.</p>
+
+    <h4>Counters</h4>
+
+    <p>The above example contains a common use case. The "score" field is a counter that we'll need to continually update with the player's latest score. Using the above method works but it's cumbersome and can lead to problems if you have multiple clients trying to update the same counter.</p>
+
+    <p>To help with storing counter-type data, Parse provides methods that atomically increment (or decrement) any number field. So, the same update can be rewritten as:</p>
+
+    <div class="code objective-c"><pre><span class="n">gameScore</span><span class="p">.</span><span class="n">increment</span><span class="p">(</span><span class="s">&quot;score&quot;</span><span class="p">);</span>
+<span class="n">gameScore</span><span class="p">.</span><span class="n">save</span><span class="p">();</span></pre></div>
+    <a href="#" name="objects-deleting"></a><a href="#" class="section section_minor" name="objects-deleting_anchor"></a>
+    <h3>Destroying Objects</h3>
+    
+    <p>To delete an object from the server:</p>
+    
+    <div class="code objective-c"><pre><span class="n">myObject</span><span class="p">.</span><span class="n">destroy</span><span class="p">({</span>
+  <span class="nl">success:</span> <span class="n">function</span><span class="p">(</span><span class="n">myObject</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// The object was deleted from Parse&#39;s servers.</span>
+  <span class="p">},</span>
+  <span class="nl">error:</span> <span class="n">function</span><span class="p">(</span><span class="n">myObject</span><span class="p">,</span> <span class="n">error</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// The delete failed.</span>
+    <span class="c1">// error is a Parse.Error with an error code and description.</span>
+  <span class="p">}</span>
+<span class="p">});</span></pre></div>    
+    <p>You can delete a single field from an object with the <code>unset</code> method:</p>
+
+    <div class="code objective-c"><pre><span class="c1">// After this, the playerName field will be empty</span>
+<span class="n">myObject</span><span class="p">.</span><span class="n">unset</span><span class="p">(</span><span class="s">&quot;playerName&quot;</span><span class="p">);</span>
+
+<span class="c1">// Saves the field deletion to the Parse servers</span>
+<span class="n">myObject</span><span class="p">.</span><span class="n">save</span><span class="p">();</span></pre></div>      
+    <a href="#" name="objects-pointers"></a><a href="#" class="section section_minor" name="objects-pointers_anchor"></a>
+    <h3>Relational Data</h3>
+    
+    <p>Objects can have relationships with other objects. To model this behavior, any <code>Parse.Object</code> can be used as a value in other <code>Parse.Object</code>s. Internally, the Parse framework will store the referred-to object in just one place, to maintain consistency.</p>
+
+    <p>For example, each <code>Comment</code> in a blogging app might correspond to one <code>Post</code>. To create a new <code>Post</code> with a single <code>Comment</code>, you could write:</p>
+
+    <div class="code objective-c"><pre><span class="c1">// Declare the types.</span>
+<span class="n">var</span> <span class="n">Post</span> <span class="o">=</span> <span class="n">Parse</span><span class="p">.</span><span class="n">Object</span><span class="p">.</span><span class="n">extend</span><span class="p">(</span><span class="s">&quot;Post&quot;</span><span class="p">);</span>
+<span class="n">var</span> <span class="n">Comment</span> <span class="o">=</span> <span class="n">Parse</span><span class="p">.</span><span class="n">Object</span><span class="p">.</span><span class="n">extend</span><span class="p">(</span><span class="s">&quot;Comment&quot;</span><span class="p">);</span>
+
+<span class="c1">// Create the post</span>
+
+<span class="n">var</span> <span class="n">myPost</span> <span class="o">=</span> <span class="n">new</span> <span class="n">Post</span><span class="p">();</span>
+<span class="n">myPost</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="s">&quot;title&quot;</span><span class="p">,</span> <span class="s">&quot;I&#39;m Hungry&quot;</span><span class="p">);</span>
+<span class="n">myPost</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="s">&quot;content&quot;</span><span class="p">,</span> <span class="s">&quot;Where should we go for lunch?&quot;</span><span class="p">);</span>
+
+<span class="c1">// Create the comment</span>
+<span class="n">var</span> <span class="n">myComment</span> <span class="o">=</span> <span class="n">new</span> <span class="n">Comment</span><span class="p">();</span>
+<span class="n">myComment</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="s">&quot;content&quot;</span><span class="p">,</span> <span class="s">&quot;Let&#39;s do Sushirrito.&quot;</span><span class="p">);</span>
+
+<span class="c1">// Add a relation between the Post and Comment</span>
+<span class="n">myComment</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="s">&quot;parent&quot;</span><span class="p">,</span> <span class="n">myPost</span><span class="p">);</span>
+
+<span class="c1">// This will save both myPost and myComment</span>
+<span class="n">myComment</span><span class="p">.</span><span class="n">save</span><span class="p">();</span></pre></div>
+    <p>You can also link objects using just their <code>objectId</code>s like so:</p>
+
+    <div class="code objective-c"><pre><span class="n">var</span> <span class="n">post</span> <span class="o">=</span> <span class="n">new</span> <span class="n">Post</span><span class="p">();</span>
+<span class="n">post</span><span class="p">.</span><span class="kt">id</span> <span class="o">=</span> <span class="s">&quot;1zEcyElZ80&quot;</span><span class="p">;</span>
+
+<span class="n">myComment</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="s">&quot;parent&quot;</span><span class="p">,</span> <span class="n">post</span><span class="p">);</span></pre></div>    
+    <p>By default, when fetching an object, related <code>Parse.Object</code>s are not fetched.  These objects' values cannot be retrieved until they have been fetched like so:</p>
+    
+    <div class="code objective-c"><pre><span class="n">var</span> <span class="n">post</span> <span class="o">=</span> <span class="n">fetchedComment</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;parent&quot;</span><span class="p">);</span>
+<span class="n">post</span><span class="p">.</span><span class="n">fetch</span><span class="p">({</span>
+  <span class="nl">success:</span> <span class="n">function</span><span class="p">(</span><span class="n">post</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">var</span> <span class="n">title</span> <span class="o">=</span> <span class="n">post</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;title&quot;</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">});</span></pre></div>
+    <p> You can also model many-to-many relationships using <code>Parse.Relation</code>. This works similar to storing an array of <code>Parse.Object</code>s in a key, except that you don't need to fetch all of the objects in a relation at once.  This allows <code>Parse.Relation</code> to scale to many more objects than the array of <code>Parse.Object</code> approach.  For example, a User may have many Posts that they might like. In this case, you can store the set of Posts that a User likes using <code>relation</code>.  In order to add a post to a list, you can do:</p>
+    <div class="code objective-c"><pre><span class="n">var</span> <span class="n">user</span> <span class="o">=</span> <span class="n">Parse</span><span class="p">.</span><span class="n">User</span><span class="p">.</span><span class="n">currentUser</span><span class="p">();</span>
+<span class="n">var</span> <span class="n">relation</span> <span class="o">=</span> <span class="n">user</span><span class="p">.</span><span class="n">relation</span><span class="p">(</span><span class="s">&quot;likes&quot;</span><span class="p">);</span>
+<span class="n">relation</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">post</span><span class="p">);</span>
+<span class="n">user</span><span class="p">.</span><span class="n">save</span><span class="p">();</span></pre></div>
+    <p> You can remove a post from a <code>Parse.Relation</code> with something like:</p>
+    <div class="code objective-c"><pre><span class="n">relation</span><span class="p">.</span><span class="n">remove</span><span class="p">(</span><span class="n">post</span><span class="p">);</span></pre></div>    <p> By default, the list of objects in this relation are not downloaded.  You can get a list of the posts that a user likes by using the <code>Parse.Query</code> returned by <code>query</code>.  The code looks like:</p>
+    <div class="code objective-c"><pre><span class="n">relation</span><span class="p">.</span><span class="n">query</span><span class="p">().</span><span class="n">find</span><span class="p">({</span>
+  <span class="nl">success:</span> <span class="n">function</span><span class="p">(</span><span class="n">list</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// list contains all the posts that the current user likes.</span>
+  <span class="p">}</span>
+<span class="p">});</span></pre></div>
+    <p>If you want only a subset of the Posts, you can add extra constraints to the <code>Parse.Query</code> returned by query like this:</p>
+    <div class="code objective-c"><pre><span class="n">var</span> <span class="n">query</span> <span class="o">=</span> <span class="n">relation</span><span class="p">.</span><span class="n">query</span><span class="p">();</span>
+<span class="n">query</span><span class="p">.</span><span class="n">equalTo</span><span class="p">(</span><span class="s">&quot;title&quot;</span><span class="p">,</span> <span class="s">&quot;I&#39;m Hungry&quot;</span><span class="p">);</span>
+<span class="n">query</span><span class="p">.</span><span class="n">find</span><span class="p">({</span>
+  <span class="nl">success:</span><span class="n">function</span><span class="p">(</span><span class="n">list</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// list contains post liked by the current user which have the title &quot;I&#39;m Hungry&quot;.</span>
+  <span class="p">}</span>
+<span class="p">});</span></pre></div>    <p>For more details on <code>Parse.Query</code>, please look at the query portion of this guide. A <code>Parse.Relation</code> behaves similar to an array of <code>Parse.Object</code> for querying purposes, so any query you can do on an array of objects, you can do on a <code>Parse.Relation</code>.</p>
+
+    <a href="#" name="objects-types"></a><a href="#" class="section section_minor" name="objects-types_anchor"></a>
+    <h3>Data Types</h3>
+
+    <p>So far we've used values with type <code>String</code>, <code>Number</code>, and <code>Parse.Object</code>. Parse also supports JavaScript <code>Date</code>s and <code>null</code>.</p>
+
+    <p>You can nest JavaScript <code>Object</code>s and JavaScript <code>Array</code>s to store more structured data within a single <code>Parse.Object</code>.<p>
+
+<p>Some examples:</p>
+
+    <div class="code objective-c"><pre><span class="n">var</span> <span class="n">number</span> <span class="o">=</span> <span class="mi">42</span><span class="p">;</span>
+<span class="n">var</span> <span class="n">string</span> <span class="o">=</span> <span class="s">&quot;the number is &quot;</span> <span class="o">+</span> <span class="n">number</span><span class="p">;</span>
+<span class="n">var</span> <span class="n">date</span> <span class="o">=</span> <span class="n">new</span> <span class="n">Date</span><span class="p">();</span>
+<span class="n">var</span> <span class="n">array</span> <span class="o">=</span> <span class="p">[</span><span class="n">string</span><span class="p">,</span> <span class="n">number</span><span class="p">];</span>
+<span class="n">var</span> <span class="n">object</span> <span class="o">=</span> <span class="p">{</span> <span class="nl">number:</span> <span class="n">number</span><span class="p">,</span> <span class="nl">string:</span> <span class="n">string</span> <span class="p">};</span>
+
+<span class="n">var</span> <span class="n">BigObject</span> <span class="o">=</span> <span class="n">Parse</span><span class="p">.</span><span class="n">Object</span><span class="p">.</span><span class="n">extend</span><span class="p">(</span><span class="s">&quot;BigObject&quot;</span><span class="p">);</span>
+<span class="n">var</span> <span class="n">bigObject</span> <span class="o">=</span> <span class="n">new</span> <span class="n">BigObject</span><span class="p">();</span>
+<span class="n">bigObject</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="s">&quot;myNumber&quot;</span><span class="p">,</span> <span class="n">number</span><span class="p">);</span>
+<span class="n">bigObject</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="s">&quot;myString&quot;</span><span class="p">,</span> <span class="n">string</span><span class="p">);</span>
+<span class="n">bigObject</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="s">&quot;myDate&quot;</span><span class="p">,</span> <span class="n">date</span><span class="p">);</span>
+<span class="n">bigObject</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="s">&quot;myArray&quot;</span><span class="p">,</span> <span class="n">array</span><span class="p">);</span>
+<span class="n">bigObject</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="s">&quot;myObject&quot;</span><span class="p">,</span> <span class="n">object</span><span class="p">);</span>
+<span class="n">bigObject</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="s">&quot;myNull&quot;</span><span class="p">,</span> <span class="n">null</span><span class="p">);</span>
+<span class="n">bigObject</span><span class="p">.</span><span class="n">save</span><span class="p">();</span></pre></div>
+    <p><code>Parse.Object</code>s should not exceed 128 kilobytes in size.</p>
+
+    <p>For more information about how Parse handles data, check out our documentation on <a href="/docs/data">Data & Security</a>.</p>
+
+
+    <a href="#" name="queries"></a><a href="#" class="section section_major" name="queries_anchor"></a>
+    <h2>Queries</h2>
+
+    <p>We've already seen how a <code>Parse.Query</code> with <code>get</code> can retrieve a single <code>Parse.Object</code> from Parse. There are many other ways to retrieve data with <code>Parse.Query</code> - you can retrieve many objects at once, put conditions on the objects you wish to retrieve, and more.
+
+    <a href="#" name="queries-basic"></a><a href="#" class="section section_minor" name="queries-basic_anchor"></a>
+    <h3>Basic Queries</h3>
+
+    <p>In many cases, <code>get</code> isn't powerful enough to specify which objects you want to retrieve. <code>Parse.Query</code> offers different ways to retrieve a list of objects rather than just a single object.</p>
+
+    <p>The general pattern is to create a <code>Parse.Query</code>, put conditions on it, and then retrieve an <code>Array</code> of matching <code>Parse.Object</code>s using <code>find</code>. For example, to retrieve all of the scores with a particular <code>playerName</code>, use the <code>equalTo</code> method to constrain the value for a key.</p>
+
+    <div class="code objective-c"><pre><span class="n">var</span> <span class="n">GameScore</span> <span class="o">=</span> <span class="n">Parse</span><span class="p">.</span><span class="n">Object</span><span class="p">.</span><span class="n">extend</span><span class="p">(</span><span class="s">&quot;GameScore&quot;</span><span class="p">);</span>
+<span class="n">var</span> <span class="n">query</span> <span class="o">=</span> <span class="n">new</span> <span class="n">Parse</span><span class="p">.</span><span class="n">Query</span><span class="p">(</span><span class="n">GameScore</span><span class="p">);</span>
+<span class="n">query</span><span class="p">.</span><span class="n">equalTo</span><span class="p">(</span><span class="s">&quot;playerName&quot;</span><span class="p">,</span> <span class="s">&quot;Dan Stemkoski&quot;</span><span class="p">);</span>
+<span class="n">query</span><span class="p">.</span><span class="n">find</span><span class="p">({</span>
+  <span class="nl">success:</span> <span class="n">function</span><span class="p">(</span><span class="n">results</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">alert</span><span class="p">(</span><span class="s">&quot;Successfully retrieved &quot;</span> <span class="o">+</span> <span class="n">results</span><span class="p">.</span><span class="n">length</span> <span class="o">+</span> <span class="s">&quot; scores.&quot;</span><span class="p">);</span>
+  <span class="p">},</span>
+  <span class="nl">error:</span> <span class="n">function</span><span class="p">(</span><span class="n">error</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">alert</span><span class="p">(</span><span class="s">&quot;Error: &quot;</span> <span class="o">+</span> <span class="n">error</span><span class="p">.</span><span class="n">code</span> <span class="o">+</span> <span class="s">&quot; &quot;</span> <span class="o">+</span> <span class="n">error</span><span class="p">.</span><span class="n">message</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">});</span></pre></div>
+    <a href="#" name="queries-constraints"></a><a href="#" class="section section_minor" name="queries-constraints_anchor"></a>
+    <h3>Query Constraints</h3>
+    
+    <p>There are several ways to put constraints on the objects found by a <code>Parse.Query</code>. You can filter out objects with a particular key-value pair with <code>whereKey:notEqualTo</code>:</p>
+
+    <div class="code objective-c"><pre><span class="n">query</span><span class="p">.</span><span class="n">notEqualTo</span><span class="p">(</span><span class="s">&quot;playerName&quot;</span><span class="p">,</span> <span class="s">&quot;Michael Yabuti&quot;</span><span class="p">);</span></pre></div>
+    <p>You can give multiple constraints, and objects will only be in the results if they match all of the constraints.  In other words, it's like an AND of constraints.</p>
+
+    <div class="code objective-c"><pre><span class="n">query</span><span class="p">.</span><span class="n">notEqualTo</span><span class="p">(</span><span class="s">&quot;playerName&quot;</span><span class="p">,</span> <span class="s">&quot;Michael Yabuti&quot;</span><span class="p">);</span>
+<span class="n">query</span><span class="p">.</span><span class="n">greaterThan</span><span class="p">(</span><span class="s">&quot;playerAge&quot;</span><span class="p">,</span> <span class="mi">18</span><span class="p">);</span></pre></div>
+    <p>You can limit the number of results by setting <code>limit</code>. By default, results are limited to 100, but anything from 1 to 1000 is a valid limit:</p>
+
+    <div class="code objective-c"><pre><span class="n">query</span><span class="p">.</span><span class="n">limit</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span> <span class="c1">// limit to at most 10 results</span></pre></div>
+    <p>If you want exactly one result, a more convenient alternative may be to use <code>first</code> instead of using <code>find</code>.</p>
+
+    <div class="code objective-c"><pre><span class="n">var</span> <span class="n">GameScore</span> <span class="o">=</span> <span class="n">Parse</span><span class="p">.</span><span class="n">Object</span><span class="p">.</span><span class="n">extend</span><span class="p">(</span><span class="s">&quot;GameScore&quot;</span><span class="p">);</span>
+<span class="n">var</span> <span class="n">query</span> <span class="o">=</span> <span class="n">new</span> <span class="n">Parse</span><span class="p">.</span><span class="n">Query</span><span class="p">(</span><span class="n">GameScore</span><span class="p">);</span>
+<span class="n">query</span><span class="p">.</span><span class="n">equalTo</span><span class="p">(</span><span class="s">&quot;playerEmail&quot;</span><span class="p">,</span> <span class="s">&quot;dstemkoski@example.com&quot;</span><span class="p">);</span>
+<span class="n">query</span><span class="p">.</span><span class="n">first</span><span class="p">({</span>
+  <span class="nl">success:</span> <span class="n">function</span><span class="p">(</span><span class="n">object</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// Successfully retrieved the object.</span>
+  <span class="p">},</span>
+  <span class="nl">error:</span> <span class="n">function</span><span class="p">(</span><span class="n">error</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">alert</span><span class="p">(</span><span class="s">&quot;Error: &quot;</span> <span class="o">+</span> <span class="n">error</span><span class="p">.</span><span class="n">code</span> <span class="o">+</span> <span class="s">&quot; &quot;</span> <span class="o">+</span> <span class="n">error</span><span class="p">.</span><span class="n">message</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">});</span></pre></div>
+    <p>You can skip the first results by setting <code>skip</code>. This can be useful for pagination:</p>
+
+    <div class="code objective-c"><pre><span class="n">query</span><span class="p">.</span><span class="n">skip</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span> <span class="c1">// skip the first 10 results</span></pre></div>    
+    <p>For sortable types like numbers and strings, you can control the order in which results are returned:</p>
+
+    <div class="code objective-c"><pre><span class="c1">// Sorts the results in ascending order by the score field</span>
+<span class="n">query</span><span class="p">.</span><span class="n">ascending</span><span class="p">(</span><span class="s">&quot;score&quot;</span><span class="p">);</span>
+
+<span class="c1">// Sorts the results in descending order by the score field</span>
+<span class="n">query</span><span class="p">.</span><span class="n">descending</span><span class="p">(</span><span class="s">&quot;score&quot;</span><span class="p">);</span></pre></div>
+    <p>For sortable types, you can also use comparisons in queries:</p>
+    
+    <div class="code objective-c"><pre><span class="c1">// Restricts to wins &lt; 50</span>
+<span class="n">query</span><span class="p">.</span><span class="n">lessThan</span><span class="p">(</span><span class="s">&quot;wins&quot;</span><span class="p">,</span> <span class="mi">50</span><span class="p">);</span>
+
+<span class="c1">// Restricts to wins &lt;= 50</span>
+<span class="n">query</span><span class="p">.</span><span class="n">lessThanOrEqualTo</span><span class="p">(</span><span class="s">&quot;wins&quot;</span><span class="p">,</span> <span class="mi">50</span><span class="p">);</span>
+
+<span class="c1">// Restricts to wins &gt; 50</span>
+<span class="n">query</span><span class="p">.</span><span class="n">greaterThan</span><span class="p">(</span><span class="s">&quot;wins&quot;</span><span class="p">,</span> <span class="mi">50</span><span class="p">);</span>
+
+<span class="c1">// Restricts to wins &gt;= 50</span>
+<span class="n">query</span><span class="p">.</span><span class="n">greaterThanOrEqualTo</span><span class="p">(</span><span class="s">&quot;wins&quot;</span><span class="p">,</span> <span class="mi">50</span><span class="p">);</span></pre></div>
+    <p>If you want to retrieve objects matching several different values, you can use <code>containedIn</code>, providing an array of acceptable values. This is often useful to replace multiple queries with a single query. For example, if you want to retrieve all scores made by one of a particular list of players:</p>
+
+    <div class="code objective-c"><pre><span class="c1">// Finds scores from any of Jonathan, Dario, or Shawn</span>
+<span class="n">query</span><span class="p">.</span><span class="n">containedIn</span><span class="p">(</span><span class="s">&quot;playerName&quot;</span><span class="p">,</span>
+                  <span class="p">[</span><span class="s">&quot;Jonathan Walsh&quot;</span><span class="p">,</span> <span class="s">&quot;Dario Wunsch&quot;</span><span class="p">,</span> <span class="s">&quot;Shawn Simon&quot;</span><span class="p">]);</span></pre></div>
+    <p>If you want to retrieve objects that do not match any of  several values you can use <code>notContainedIn</code>, providing an array of acceptable values.  For example if you want to retrieve all scores from players besides those in a list:</p>
+    <div class="code objective-c"><pre><span class="c1">// Finds scores from anyone who is neither Jonathan, Dario, nor Shawn</span>
+<span class="n">query</span><span class="p">.</span><span class="n">notContainedIn</span><span class="p">(</span><span class="s">&quot;playerName&quot;</span><span class="p">,</span>
+                     <span class="p">[</span><span class="s">&quot;Jonathan Walsh&quot;</span><span class="p">,</span> <span class="s">&quot;Dario Wunsch&quot;</span><span class="p">,</span> <span class="s">&quot;Shawn Simon&quot;</span><span class="p">]);</span></pre></div>
+
+    <p>If you want to retrieve objects that have a particular key set, you can use <code>exists</code>. Conversely, if you want to retrieve objects without a particular key set, you can use <code>doesNotExist</code>.
+
+    <div class="code objective-c"><pre><span class="c1">// Finds objects that have the score set</span>
+<span class="n">query</span><span class="p">.</span><span class="n">exists</span><span class="p">(</span><span class="s">&quot;score&quot;</span><span class="p">);</span>
+
+<span class="c1">// Finds objects that don&#39;t have the score set</span>
+<span class="n">query</span><span class="p">.</span><span class="n">doesNotExist</span><span class="p">(</span><span class="s">&quot;score&quot;</span><span class="p">);</span></pre></div>    <p>You can use the <code>matchesKeyInQuery</code> method to get objects where a key matches the value of a key in a set of objects resulting from another query.  For example, if you have a class containing sports teams and you store a user's hometown in the user class, you can issue one query to find the list of users whose hometown teams have winning records.  The query would look like:</p>
+    <div class="code objective-c"><pre><span class="n">var</span> <span class="n">Team</span> <span class="o">=</span> <span class="n">Parse</span><span class="p">.</span><span class="n">Object</span><span class="p">.</span><span class="n">extend</span><span class="p">(</span><span class="s">&quot;Team&quot;</span><span class="p">);</span>
+<span class="n">var</span> <span class="n">teamQuery</span> <span class="o">=</span> <span class="n">new</span> <span class="n">Parse</span><span class="p">.</span><span class="n">Query</span><span class="p">(</span><span class="n">Team</span><span class="p">);</span>
+<span class="n">teamQuery</span><span class="p">.</span><span class="n">greaterThan</span><span class="p">(</span><span class="s">&quot;winPct&quot;</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">);</span>
+<span class="n">var</span> <span class="n">userQuery</span> <span class="o">=</span> <span class="n">new</span> <span class="n">Parse</span><span class="p">.</span><span class="n">Query</span><span class="p">(</span><span class="n">Parse</span><span class="p">.</span><span class="n">User</span><span class="p">);</span>
+<span class="n">userQuery</span><span class="p">.</span><span class="n">matchesKeyInQuery</span><span class="p">(</span><span class="s">&quot;hometown&quot;</span><span class="p">,</span> <span class="s">&quot;city&quot;</span><span class="p">,</span> <span class="n">teamQuery</span><span class="p">);</span>
+<span class="n">userQuery</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="nl">success:</span> <span class="n">function</span><span class="p">(</span><span class="n">results</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// results has the list of users with a hometown team with a winning record</span>
+  <span class="p">}</span>
+<span class="p">});</span></pre></div> 
+    <a href="#" name="queries-arrays"></a><a href="#" class="section section_minor" name="queries-arrays_anchor"></a>
+    <h3>Queries on Array Values</h3>
+    <p>For keys with an array type, you can find objects where the key's array value contains 2 by:</p>
+     <div class="code objective-c"><pre><span class="c1">// Find all objects where the array in arrayKey contains 2.</span>
+<span class="n">query</span><span class="p">.</span><span class="n">equalTo</span><span class="p">(</span><span class="s">&quot;arrayKey&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">);</span></pre></div>
+    <a href="#" name="queries-strings"></a><a href="#" class="section section_minor" name="queries-strings_anchor"></a>
+    <h3>Queries on String Values</h3>
+
+    <p>There are several ways you can search over values containing strings. For any regular expression, you can use <code>matches</code> to retrieve only the values that match it:</p>
+
+    <div class="code objective-c"><pre><span class="c1">// Finds barbecue sauces that start with a capital letter and a digit.</span>
+<span class="n">var</span> <span class="n">BarbecueSauce</span> <span class="o">=</span> <span class="n">Parse</span><span class="p">.</span><span class="n">Object</span><span class="p">.</span><span class="n">extend</span><span class="p">(</span><span class="s">&quot;BarbecueSauce&quot;</span><span class="p">);</span>
+<span class="n">var</span> <span class="n">query</span> <span class="o">=</span> <span class="n">new</span> <span class="n">Parse</span><span class="p">.</span><span class="n">Query</span><span class="p">(</span><span class="n">BarbecueSauce</span><span class="p">);</span>
+<span class="n">query</span><span class="p">.</span><span class="n">matches</span><span class="p">(</span><span class="s">&quot;name&quot;</span><span class="p">,</span> <span class="o">/^</span><span class="p">[</span><span class="n">A</span><span class="o">-</span><span class="n">Z</span><span class="p">][</span><span class="mi">0</span><span class="o">-</span><span class="mi">9</span><span class="p">]</span><span class="o">/</span><span class="p">);</span>
+
+<span class="n">query</span><span class="p">.</span><span class="n">find</span><span class="p">({</span>
+  <span class="nl">success:</span> <span class="n">function</span><span class="p">(</span><span class="n">sauces</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// The sauces could have, for example, name = &quot;A1 Steak Sauce&quot;</span>
+  <span class="p">}</span>
+<span class="p">});</span></pre></div>
+    <p>Parse uses the <a href="http://en.wikipedia.org/wiki/Perl_Compatible_Regular_Expressions">Perl-compatible regular expression</a> format.</p>
+
+    <p>Parse.Query also supports modifiers with <code>matches</code>. The supported PCRE modifiers are:<br>
+    <code>i</code> - Case insensitive search<br>
+    <code>m</code> - Search across multiple lines of input<br>
+
+    <div class="code objective-c"><pre><span class="c1">// Some people type &quot;BBQ&quot;, others type &quot;bbq&quot;. Consider them the same thing with the i modifier.</span>
+<span class="c1">// The m modifier helps us find sauces that call themselves &quot;bbq sauce&quot; after the first line of text.</span>
+<span class="n">var</span> <span class="n">query</span> <span class="o">=</span> <span class="n">new</span> <span class="n">Parse</span><span class="p">.</span><span class="n">Query</span><span class="p">(</span><span class="n">BarbecueSauce</span><span class="p">);</span>
+<span class="n">query</span><span class="p">.</span><span class="n">matches</span><span class="p">(</span><span class="s">&quot;description&quot;</span><span class="p">,</span> <span class="s">&quot;bbq&quot;</span><span class="p">,</span> <span class="s">&quot;im&quot;</span><span class="p">);</span>
+
+<span class="n">query</span><span class="p">.</span><span class="n">find</span><span class="p">({</span>
+  <span class="nl">success:</span> <span class="n">function</span><span class="p">(</span><span class="n">sauces</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// All sauces that call themselves a &quot;bbq&quot; sauce.</span>
+  <span class="p">}</span>
+<span class="p">});</span></pre></div>
+    <p>There are also several helper functions for standard string operations: substrings, prefixes, and suffixes. Use <code>contains</code> to restrict to string values containing a substring:</p>
+    
+    <div class="code objective-c"><pre><span class="c1">// Finds barbecue sauces that contain the string &quot;Extra Spicy!&quot;.</span>
+<span class="n">var</span> <span class="n">query</span> <span class="o">=</span> <span class="n">new</span> <span class="n">Parse</span><span class="p">.</span><span class="n">Query</span><span class="p">(</span><span class="n">BarbecueSauce</span><span class="p">);</span>
+<span class="n">query</span><span class="p">.</span><span class="n">contains</span><span class="p">(</span><span class="s">&quot;name&quot;</span><span class="p">,</span> <span class="s">&quot;Extra Spicy!&quot;</span><span class="p">);</span></pre></div>
+    <p>Use <code>startsWith</code> to restrict to string values that start with a particular string. Similar to a MySQL LIKE operator, this is indexed so it is efficient for large datasets:</p>
+
+    <div class="code objective-c"><pre><span class="c1">// Finds barbecue sauces that start with &quot;Big Daddy&#39;s&quot;.</span>
+<span class="n">var</span> <span class="n">query</span> <span class="o">=</span> <span class="n">new</span> <span class="n">Parse</span><span class="p">.</span><span class="n">Query</span><span class="p">(</span><span class="n">BarbecueSauce</span><span class="p">);</span>
+<span class="n">query</span><span class="p">.</span><span class="n">startsWith</span><span class="p">(</span><span class="s">&quot;name&quot;</span><span class="p">,</span> <span class="s">&quot;Big Daddy&#39;s&quot;</span><span class="p">);</span></pre></div>    
+    <p>Use <code>endsWith</code> to restrict to string values that end with a particular string:</p>
+
+    <div class="code objective-c"><pre><span class="c1">// Finds barbecue sauces that end with &quot;Original Recipe&quot;.</span>
+<span class="n">var</span> <span class="n">query</span> <span class="o">=</span> <span class="n">new</span> <span class="n">Parse</span><span class="p">.</span><span class="n">Query</span><span class="p">(</span><span class="n">BarbecueSauce</span><span class="p">);</span>
+<span class="n">query</span><span class="p">.</span><span class="n">endsWith</span><span class="p">(</span><span class="s">&quot;Original Recipe&quot;</span><span class="p">);</span></pre></div>    
+    <a href="#" name="queries-relational"></a><a href="#" class="section section_minor" name="queries-relational_anchor"></a>
+    <h3>Relational Queries</h3>
+    
+    <p>There are several ways to issue queries for relational data. If you want to retrieve all objects where a field matches a particular <code>Parse.Object</code>, you can use <code>equalTo</code> just like for other data types. For example, if each <code>Comment</code> has a <code>Post</code> object in its <code>post</code> field, you can fetch all comments for a particular <code>Post</code>:</p>
+
+    <div class="code objective-c"><pre><span class="c1">// Assume Parse.Object myPost was previously created.</span>
+<span class="n">var</span> <span class="n">query</span> <span class="o">=</span> <span class="n">new</span> <span class="n">Parse</span><span class="p">.</span><span class="n">Query</span><span class="p">(</span><span class="n">Comment</span><span class="p">);</span>
+<span class="n">query</span><span class="p">.</span><span class="n">equalTo</span><span class="p">(</span><span class="s">&quot;post&quot;</span><span class="p">,</span> <span class="n">myPost</span><span class="p">);</span>
+<span class="n">query</span><span class="p">.</span><span class="n">find</span><span class="p">({</span>
+  <span class="nl">success:</span> <span class="n">function</span><span class="p">(</span><span class="n">comments</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// comments now contains the comments for myPost</span>
+  <span class="p">}</span>
+<span class="p">});</span></pre></div>
+    <p>If you want to retrieve all objects where a field contains a <code>Parse.Object</code> that matches a different query, you can use <code>matchesQuery</code>.  In order to find all comments for posts containing images, you can do:</p>
+    <div class="code objective-c"><pre><span class="n">var</span> <span class="n">Post</span> <span class="o">=</span> <span class="n">Parse</span><span class="p">.</span><span class="n">Object</span><span class="p">.</span><span class="n">extend</span><span class="p">(</span><span class="s">&quot;Post&quot;</span><span class="p">);</span>
+<span class="n">var</span> <span class="n">Comment</span> <span class="o">=</span> <span class="n">Parse</span><span class="p">.</span><span class="n">Object</span><span class="p">.</span><span class="n">extend</span><span class="p">(</span><span class="s">&quot;Comment&quot;</span><span class="p">);</span>
+<span class="n">var</span> <span class="n">innerQuery</span> <span class="o">=</span> <span class="n">new</span> <span class="n">Parse</span><span class="p">.</span><span class="n">Query</span><span class="p">(</span><span class="n">Post</span><span class="p">);</span>
+<span class="n">innerQuery</span><span class="p">.</span><span class="n">exists</span><span class="p">(</span><span class="s">&quot;image&quot;</span><span class="p">);</span>
+<span class="n">var</span> <span class="n">query</span> <span class="o">=</span> <span class="n">new</span> <span class="n">Parse</span><span class="p">.</span><span class="n">Query</span><span class="p">(</span><span class="n">Comment</span><span class="p">);</span>
+<span class="n">query</span><span class="p">.</span><span class="n">matchesQuery</span><span class="p">(</span><span class="s">&quot;post&quot;</span><span class="p">,</span> <span class="n">innerQuery</span><span class="p">);</span>
+<span class="n">query</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="nl">success:</span> <span class="n">function</span><span class="p">(</span><span class="n">comments</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// comments now contains the comments for posts with images.</span>
+  <span class="p">}</span>
+<span class="p">});</span></pre></div>  <p>If you want to retrieve all objects where a field contains a <code>Parse.Object</code> that does not match a different query, you can use <code>doesNotMatchQuery</code>.  In order to find all comments for posts without images, you can do:</p>
+  <div class="code objective-c"><pre><span class="n">var</span> <span class="n">Post</span> <span class="o">=</span> <span class="n">Parse</span><span class="p">.</span><span class="n">Object</span><span class="p">.</span><span class="n">extend</span><span class="p">(</span><span class="s">&quot;Post&quot;</span><span class="p">);</span>
+<span class="n">var</span> <span class="n">Comment</span> <span class="o">=</span> <span class="n">Parse</span><span class="p">.</span><span class="n">Object</span><span class="p">.</span><span class="n">extend</span><span class="p">(</span><span class="s">&quot;Comment&quot;</span><span class="p">);</span>
+<span class="n">var</span> <span class="n">innerQuery</span> <span class="o">=</span> <span class="n">new</span> <span class="n">Parse</span><span class="p">.</span><span class="n">Query</span><span class="p">(</span><span class="n">Post</span><span class="p">);</span>
+<span class="n">innerQuery</span><span class="p">.</span><span class="n">exists</span><span class="p">(</span><span class="s">&quot;image&quot;</span><span class="p">);</span>
+<span class="n">var</span> <span class="n">query</span> <span class="o">=</span> <span class="n">new</span> <span class="n">Parse</span><span class="p">.</span><span class="n">Query</span><span class="p">(</span><span class="n">Comment</span><span class="p">);</span>
+<span class="n">query</span><span class="p">.</span><span class="n">doesNotMatchesQuery</span><span class="p">(</span><span class="s">&quot;post&quot;</span><span class="p">,</span> <span class="n">innerQuery</span><span class="p">);</span>
+<span class="n">query</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="nl">success:</span> <span class="n">function</span><span class="p">(</span><span class="n">comments</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// comments now contains the comments for posts without images.</span>
+  <span class="p">}</span>
+<span class="p">});</span></pre></div>
+
+
+    <p>You can also do relational queries by <code>objectId</code>:</p>
+
+    <div class="code objective-c"><pre><span class="n">var</span> <span class="n">post</span> <span class="o">=</span> <span class="n">new</span> <span class="n">Post</span><span class="p">();</span>
+<span class="n">post</span><span class="p">.</span><span class="kt">id</span> <span class="o">=</span> <span class="s">&quot;1zEcyElZ80&quot;</span><span class="p">;</span>
+<span class="n">query</span><span class="p">.</span><span class="n">equalTo</span><span class="p">(</span><span class="s">&quot;post&quot;</span><span class="p">,</span> <span class="n">post</span><span class="p">);</span></pre></div>
+
+    <p>In some situations, you want to return multiple types of related objects in one query. You can do this with the <code>include</code> method. For example, let's say you are retrieving the last ten comments, and you want to retrieve their related posts at the same time:</p>
+
+    <div class="code objective-c"><pre><span class="n">var</span> <span class="n">query</span> <span class="o">=</span> <span class="n">new</span> <span class="n">Parse</span><span class="p">.</span><span class="n">Query</span><span class="p">(</span><span class="n">Comment</span><span class="p">);</span>
+
+<span class="c1">// Retrieve the most recent ones</span>
+<span class="n">query</span><span class="p">.</span><span class="n">descending</span><span class="p">(</span><span class="s">&quot;createdAt&quot;</span><span class="p">);</span>
+
+<span class="c1">// Only retrieve the last ten</span>
+<span class="n">query</span><span class="p">.</span><span class="n">limit</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>
+
+<span class="c1">// Include the post data with each comment</span>
+<span class="n">query</span><span class="p">.</span><span class="n">include</span><span class="p">(</span><span class="s">&quot;post&quot;</span><span class="p">);</span>
+
+<span class="n">query</span><span class="p">.</span><span class="n">find</span><span class="p">({</span>
+  <span class="nl">success:</span> <span class="n">function</span><span class="p">(</span><span class="n">comments</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// Comments now contains the last ten comments, and the &quot;post&quot; field</span>
+    <span class="c1">// has been populated. For example:</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">var</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">comments</span><span class="p">.</span><span class="n">length</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+      <span class="c1">// This does not require a network access.</span>
+      <span class="n">var</span> <span class="n">post</span> <span class="o">=</span> <span class="n">comments</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;post&quot;</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">});</span></pre></div>
+    <p>You can also do multi level includes using dot notation.  If you wanted to include the post for a comment and the post's author as well you can do:</p>
+    <div class="code objective-c"><pre><span class="n">query</span><span class="p">.</span><span class="n">include</span><span class="p">([</span><span class="s">&quot;post.author&quot;</span><span class="p">]);</span></pre></div>
+
+    <p>You can issue a query with multiple fields included by calling <code>include</code> multiple times. This functionality also works with Parse.Query helpers like <code>first</code> and <code>get</code>.</p>
+
+    <a href="#" name="queries-counting"></a><a href="#" class="section section_minor" name="queries-counting_anchor"></a>
+    <h3>Counting Objects</h3>
+
+    <p>If you just need to count how many objects match a query, but you do not need to retrieve all the objects that match, you can use <code>count</code> instead of <code>find</code>. For example, to count how many games have been played by a particular player:</p>
+
+    <div class="code objective-c"><pre><span class="n">var</span> <span class="n">GameScore</span> <span class="o">=</span> <span class="n">Parse</span><span class="p">.</span><span class="n">Object</span><span class="p">.</span><span class="n">extend</span><span class="p">(</span><span class="s">&quot;GameScore&quot;</span><span class="p">);</span>
+<span class="n">var</span> <span class="n">query</span> <span class="o">=</span> <span class="n">new</span> <span class="n">Parse</span><span class="p">.</span><span class="n">Query</span><span class="p">(</span><span class="n">GameScore</span><span class="p">);</span>
+<span class="n">query</span><span class="p">.</span><span class="n">equalTo</span><span class="p">(</span><span class="s">&quot;playerName&quot;</span><span class="p">,</span> <span class="s">&quot;Sean Plott&quot;</span><span class="p">);</span>
+<span class="n">query</span><span class="p">.</span><span class="n">count</span><span class="p">({</span>
+  <span class="nl">success:</span> <span class="n">function</span><span class="p">(</span><span class="n">count</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// The count request succeeded. Show the count</span>
+    <span class="n">alert</span><span class="p">(</span><span class="s">&quot;Sean has played &quot;</span> <span class="o">+</span> <span class="n">count</span> <span class="o">+</span> <span class="s">&quot; games&quot;</span><span class="p">);</span>
+  <span class="p">},</span>
+  <span class="nl">error:</span> <span class="n">function</span><span class="p">(</span><span class="n">error</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// The request failed</span>
+  <span class="p">}</span>
+<span class="p">});</span></pre></div>
+    <a href="#" name="collections"></a><a href="#" class="section section_minor" name="collections_anchor"></a>
+    <h2>Collections</h2>
+
+    <a href="#" name="collections-extend"></a><a href="#" class="section section_minor" name="collections-extend_anchor"></a>
+
+    <p>A <code>Parse.Collection</code> is an ordered set of <code>Parse.Object</code>s.  It is compatible with <code><a href="http://documentcloud.github.com/backbone/#Collection">Backbone.Collection</a></code>, and has all the same functionality.  You can create a new subclass using either a model class, or a particular <code>Parse.Query</code>.</p>
+
+    <div class="code objective-c"><pre><span class="c1">// A Collection containing all instances of TestObject.</span>
+<span class="n">var</span> <span class="n">TestCollection</span> <span class="o">=</span> <span class="n">Parse</span><span class="p">.</span><span class="n">Collection</span><span class="p">.</span><span class="n">extend</span><span class="p">({</span>
+  <span class="nl">model:</span> <span class="n">TestObject</span>
+<span class="p">});</span>
+<span class="n">var</span> <span class="n">collection</span> <span class="o">=</span> <span class="n">new</span> <span class="n">TestCollection</span><span class="p">();</span>
+
+<span class="c1">// A Collection of TestObjects whose temperature is &quot;hot&quot;.</span>
+<span class="n">var</span> <span class="n">HotCollection</span> <span class="o">=</span> <span class="n">Parse</span><span class="p">.</span><span class="n">Collection</span><span class="p">.</span><span class="n">extend</span><span class="p">({</span>
+  <span class="nl">model:</span> <span class="n">TestObject</span><span class="p">,</span>
+  <span class="nl">query:</span> <span class="p">(</span><span class="n">new</span> <span class="n">Parse</span><span class="p">.</span><span class="n">Query</span><span class="p">(</span><span class="n">TestObject</span><span class="p">)).</span><span class="n">equalTo</span><span class="p">(</span><span class="s">&quot;temperature&quot;</span><span class="p">,</span> <span class="s">&quot;hot&quot;</span><span class="p">)</span>
+<span class="p">});</span>
+<span class="n">var</span> <span class="n">collection</span> <span class="o">=</span> <span class="n">new</span> <span class="n">HotCollection</span><span class="p">();</span>
+
+<span class="c1">// The Collection of TestObjects that match a complex query.</span>
+<span class="n">var</span> <span class="n">query</span> <span class="o">=</span> <span class="n">new</span> <span class="n">Parse</span><span class="p">.</span><span class="n">Query</span><span class="p">(</span><span class="n">TestObject</span><span class="p">);</span>
+<span class="n">query</span><span class="p">.</span><span class="n">equalTo</span><span class="p">(</span><span class="s">&quot;temperature&quot;</span><span class="p">,</span> <span class="s">&quot;hot&quot;</span><span class="p">);</span>
+<span class="n">query</span><span class="p">.</span><span class="n">greaterThan</span><span class="p">(</span><span class="s">&quot;degreesF&quot;</span><span class="p">,</span> <span class="mi">100</span><span class="p">);</span>
+<span class="n">var</span> <span class="n">collection</span> <span class="o">=</span> <span class="n">query</span><span class="p">.</span><span class="n">collection</span><span class="p">();</span></pre></div>
+    <a href="#" name="collections-fetch"></a><a href="#" class="section section_minor" name="collections-fetch_anchor"></a>
+    <h3>Retrieving Collections</h3>
+
+    <p>To load all of the items in the collection, use the <code>fetch</code> method.</p>
+
+    <div class="code objective-c"><pre><span class="n">var</span> <span class="n">collection</span> <span class="o">=</span> <span class="n">new</span> <span class="n">TestCollection</span><span class="p">();</span>
+<span class="n">collection</span><span class="p">.</span><span class="n">fetch</span><span class="p">({</span>
+  <span class="nl">success:</span> <span class="n">function</span><span class="p">(</span><span class="n">collection</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">collection</span><span class="p">.</span><span class="n">each</span><span class="p">(</span><span class="n">function</span><span class="p">(</span><span class="n">object</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">console</span><span class="p">.</span><span class="n">warn</span><span class="p">(</span><span class="n">object</span><span class="p">);</span>
+    <span class="p">});</span>
+  <span class="p">},</span>
+  <span class="nl">error:</span> <span class="n">function</span><span class="p">(</span><span class="n">collection</span><span class="p">,</span> <span class="n">error</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// The collection could not be retrieved.</span>
+  <span class="p">}</span>
+<span class="p">});</span></pre></div>
+    <a href="#" name="collections-comparator"></a><a href="#" class="section section_minor" name="collections-comparator_anchor"></a>
+    <h3>Sorting Collections</h3>
+
+    <p>You can keep all the items in a collection in a sorted order by setting a <code>comparator</code>.</p>
+
+    <div class="code objective-c"><pre><span class="n">var</span> <span class="n">collection</span> <span class="o">=</span> <span class="n">new</span> <span class="n">TestCollection</span><span class="p">();</span>
+<span class="n">collection</span><span class="p">.</span><span class="n">comparator</span> <span class="o">=</span> <span class="n">function</span><span class="p">(</span><span class="n">object</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="n">object</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;temperature&quot;</span><span class="p">);</span>
+<span class="p">};</span></pre></div>
+    <a href="#" name="collections-modifying"></a><a href="#" class="section section_minor" name="collections-modifying_anchor"></a>
+    <h3>Modifying a Collection</h3>
+
+    <p>Collections are mutable.  You can access all the items, and add or remove items.</p>
+
+    <div class="code objective-c"><pre><span class="n">var</span> <span class="n">collection</span> <span class="o">=</span> <span class="n">new</span> <span class="n">TestCollection</span><span class="p">();</span>
+
+<span class="n">collection</span><span class="p">.</span><span class="n">add</span><span class="p">([</span>
+  <span class="p">{</span><span class="s">&quot;name&quot;</span><span class="p">,</span> <span class="s">&quot;Duke&quot;</span><span class="p">},</span>
+  <span class="p">{</span><span class="s">&quot;name&quot;</span><span class="p">,</span> <span class="s">&quot;Scarlett&quot;</span><span class="p">}</span>
+<span class="p">]);</span>
+
+<span class="c1">// Get the &quot;Duke&quot; Parse.Object by its sorted position.</span>
+<span class="n">var</span> <span class="n">model</span> <span class="o">=</span> <span class="n">collection</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+
+<span class="c1">// Or you can get it by Parse objectId.</span>
+<span class="n">var</span> <span class="n">modelAgain</span> <span class="o">=</span> <span class="n">collection</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">model</span><span class="p">.</span><span class="kt">id</span><span class="p">);</span>
+
+<span class="c1">// Remove &quot;Duke&quot; from the collection.</span>
+<span class="n">collection</span><span class="p">.</span><span class="n">remove</span><span class="p">(</span><span class="n">model</span><span class="p">);</span>
+
+<span class="c1">// Completely replace all items in the collection.</span>
+<span class="n">collection</span><span class="p">.</span><span class="n">reset</span><span class="p">([</span>
+  <span class="p">{</span><span class="s">&quot;name&quot;</span><span class="p">,</span> <span class="s">&quot;Hawk&quot;</span><span class="p">},</span>
+  <span class="p">{</span><span class="s">&quot;name&quot;</span><span class="p">,</span> <span class="s">&quot;Jane&quot;</span><span class="p">}</span>
+<span class="p">]);</span></pre></div>
+    <a href="#" name="users"></a><a href="#" class="section section_minor" name="users_anchor"></a>
+    <h2>Users</h2>
+
+    <a href="#" name="users-intro"></a><a href="#" class="section section_minor" name="users-intro_anchor"></a>
+
+    <p>At the core of many apps, there is a notion of user accounts that lets users access their information in a secure manner. We provide a specialized user class called <code>Parse.User</code> that automatically handles much of the functionality required for user account management.</p>
+
+    <p>With this class, you'll be able to add user account functionality in your app.</p>
+
+    <p><code>Parse.User</code> is a subclass of <code>Parse.Object</code>, and has all the same features, such as flexible schema, automatic persistence, and a key value interface. All the methods that are on <code>Parse.Object</code> also exist in <code>Parse.User</code>. The difference is that Parse.User has some special additions specific to user accounts.</p>
+
+    <a href="#" name="users-props"></a><a href="#" class="section section_minor" name="users-props_anchor"></a>
+    <h3>Properties</h3>
+
+    <p><code>Parse.User</code> has several values that set it apart from <code>Parse.Object</code>:</p>
+
+    <ul>
+        <li>username: The username for the user (required).</li>
+        <li>password: The password for the user (required on signup).</li>
+        <li>email: The email address for the user (optional).</li>
+    </ul>
+
+    <p>We'll go through each of these in detail as we run through the various use cases for users.</p>
+
+    <a href="#" name="users-signup"></a><a href="#" class="section section_minor" name="users-signup_anchor"></a>
+    <h3>Signing Up</h3>
+
+    <p>The first thing your app will do is probably ask the user to sign up. The following code illustrates a typical sign up:</p>
+
+    <div class="code objective-c"><pre><span class="n">var</span> <span class="n">user</span> <span class="o">=</span> <span class="n">new</span> <span class="n">Parse</span><span class="p">.</span><span class="n">User</span><span class="p">();</span>
+<span class="n">user</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="s">&quot;username&quot;</span><span class="p">,</span> <span class="s">&quot;my name&quot;</span><span class="p">);</span>
+<span class="n">user</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="s">&quot;password&quot;</span><span class="p">,</span> <span class="s">&quot;my pass&quot;</span><span class="p">);</span>
+<span class="n">user</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="s">&quot;email&quot;</span><span class="p">,</span> <span class="s">&quot;email@example.com&quot;</span><span class="p">);</span>
+
+<span class="c1">// other fields can be set just like with Parse.Object</span>
+<span class="n">user</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="s">&quot;phone&quot;</span><span class="p">,</span> <span class="s">&quot;415-392-0202&quot;</span><span class="p">);</span>
+
+<span class="n">user</span><span class="p">.</span><span class="n">signUp</span><span class="p">(</span><span class="n">null</span><span class="p">,</span> <span class="p">{</span>
+  <span class="nl">success:</span> <span class="n">function</span><span class="p">(</span><span class="n">user</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// Hooray! Let them use the app now.</span>
+  <span class="p">},</span>
+  <span class="nl">error:</span> <span class="n">function</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">error</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// Show the error message somewhere and let the user try again.</span>
+    <span class="n">alert</span><span class="p">(</span><span class="s">&quot;Error: &quot;</span> <span class="o">+</span> <span class="n">error</span><span class="p">.</span><span class="n">code</span> <span class="o">+</span> <span class="s">&quot; &quot;</span> <span class="o">+</span> <span class="n">error</span><span class="p">.</span><span class="n">message</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">});</span></pre></div>
+    <p>This call will asynchronously create a new user in your Parse App. Before it does this, it also checks to make sure that both the username and email are unique. Also, it securely hashes the password on the server. We never store passwords in plaintext, nor will we ever transmit passwords back to the client in plaintext.</p>
+
+    <p>Note that we used the <code>signUp</code> method, not the <code>save</code> method. New <code>Parse.User</code>s should always be created using the <code>signUp</code> method. Subsequent updates to a user can be done by calling <code>save</code>.</p>
+
+    <p>If a signup isn't successful, you should read the error object that is returned. The most likely case is that the username or email has already been taken by another user. You should clearly communicate this to your users, and ask them try a different username.</p>
+
+    <p>You are free to use an email address as the username. Simply ask your users to enter their email, but fill it in the username property &mdash; <code>Parse.User</code> will work as normal. We'll go over how this is handled in the reset password section.</p>
+
+    <a href="#" name="users-login"></a><a href="#" class="section section_minor" name="users-login_anchor"></a>
+    <h3>Logging In</h3>
+
+    <p>Of course, after you allow users to sign up, you need to let them log in to their account in the future. To do this, you can use the class method <code>logIn</code>.</p>
+
+    <div class="code objective-c"><pre><span class="n">Parse</span><span class="p">.</span><span class="n">User</span><span class="p">.</span><span class="n">logIn</span><span class="p">(</span><span class="s">&quot;myname&quot;</span><span class="p">,</span> <span class="s">&quot;mypass&quot;</span><span class="p">,</span> <span class="p">{</span>
+  <span class="nl">success:</span> <span class="n">function</span><span class="p">(</span><span class="n">user</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// Do stuff after successful login.</span>
+  <span class="p">},</span>
+  <span class="nl">error:</span> <span class="n">function</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">error</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// The login failed. Check error to see why.</span>
+  <span class="p">}</span>
+<span class="p">});</span></pre></div>    
+    <a href="#" name="users-email-verification"></a><a href="#" class="section section_minor" name="users-email-verification_anchor"></a>
+    <h3>Verifying Emails</h3>
+    <p>Enabling email verification in an application's settings allows the application to reserve part of its experience for users with confirmed email addresses. Email verification adds the <code>emailVerified</code> key to the <code>Parse.User</code> object. When a <code>Parse.User</code>'s <code>email</code> is set or modified, <code>emailVerified</code> is set to <code>false</code>. Parse then emails the user a link which will set <code>emailVerified</code> to <code>true</code>.</p>
+    <p>There are three <code>emailVerified</code> states to consider:
+      <ol>
+        <li><code>true</code> - the user confirmed his or her email address by clicking on the link Parse emailed them. <code>Parse.Users</code> can never have a <code>true</code> value when the user account is first created.</li>
+        <li><code>false</code> - at the time the <code>Parse.User</code> object was last refreshed, the user had not confirmed his or her email address. If <code>emailVerified</code> is <code>false</code>, consider calling <code>fetch</code> on the <code>Parse.User</code>.</li>
+        <li><em>missing</em> - the <code>Parse.User</code> was created when email verification was off or the <code>Parse.User</code> does not have an <code>email</code>.</li>
+      </ol>
+    </p>
+
+    <a href="#" name="users-current"></a><a href="#" class="section section_minor" name="users-current_anchor"></a>
+    <h3>Current User</h3>
+
+    <p>It would be bothersome if the user had to log in every time they open your app. You can avoid this by using the cached <code>currentUser</code> object.</p>
+
+    <p>Whenever you use any signup or login methods, the user is cached in localStorage. You can treat this cache as a session, and automatically assume the user is logged in:</p>
+
+    <div class="code objective-c"><pre><span class="n">var</span> <span class="n">currentUser</span> <span class="o">=</span> <span class="n">Parse</span><span class="p">.</span><span class="n">User</span><span class="p">.</span><span class="n">current</span><span class="p">();</span>
+<span class="k">if</span> <span class="p">(</span><span class="n">currentUser</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// do stuff with the user</span>
+<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="c1">// show the signup or login page</span>
+<span class="p">}</span></pre></div>
+    <p>You can clear the current user by logging them out:</p>
+
+    <div class="code objective-c"><pre><span class="n">Parse</span><span class="p">.</span><span class="n">User</span><span class="p">.</span><span class="n">logOut</span><span class="p">();</span>
+
+<span class="n">var</span> <span class="n">currentUser</span> <span class="o">=</span> <span class="n">Parse</span><span class="p">.</span><span class="n">User</span><span class="p">.</span><span class="n">current</span><span class="p">();</span>  <span class="c1">// this will now be null</span></pre></div>
+    <a href="#" name="users-security"></a><a href="#" class="section section_minor" name="users-security_anchor"></a>
+    <h3>Security For User Objects</h3>
+
+    <p>The <code>Parse.User</code> class is secured by default. Data stored in a <code>Parse.User</code> can only be modified by that user. By default, the data can still be read by any client. Thus, some <code>Parse.User</code> objects are authenticated and can be modified, whereas others are read-only.</p>
+
+    <p>Specifically, you are not able to invoke any of the <code>save</code> or <code>delete</code> methods unless the <code>Parse.User</code> was obtained using an authenticated method, like <code>logIn</code> or <code>signUp</code>. This ensures that only the user can alter their own data.</p>
+
+    <p>The following illustrates this security policy:</p>
+
+    <div class="code objective-c"><pre><span class="n">var</span> <span class="n">user</span> <span class="o">=</span> <span class="n">Parse</span><span class="p">.</span><span class="n">User</span><span class="p">.</span><span class="n">logIn</span><span class="p">(</span><span class="s">&quot;my_username&quot;</span><span class="p">,</span> <span class="s">&quot;my_password&quot;</span><span class="p">,</span> <span class="p">{</span>
+  <span class="nl">success:</span> <span class="n">function</span><span class="p">(</span><span class="n">user</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">user</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="s">&quot;username&quot;</span><span class="p">,</span> <span class="s">&quot;my_new_username&quot;</span><span class="p">);</span>  <span class="c1">// attempt to change username</span>
+    <span class="n">user</span><span class="p">.</span><span class="n">save</span><span class="p">(</span><span class="n">null</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nl">success:</span> <span class="n">function</span><span class="p">(</span><span class="n">user</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// This succeeds, since the user was authenticated on the device</span>
+
+        <span class="c1">// Get the user from a non-authenticated method</span>
+        <span class="n">var</span> <span class="n">query</span> <span class="o">=</span> <span class="n">new</span> <span class="n">Parse</span><span class="p">.</span><span class="n">Query</span><span class="p">(</span><span class="n">Parse</span><span class="p">.</span><span class="n">User</span><span class="p">);</span>
+        <span class="n">query</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">user</span><span class="p">.</span><span class="n">objectId</span><span class="p">,</span> <span class="p">{</span>
+          <span class="nl">success:</span> <span class="n">function</span><span class="p">(</span><span class="n">userAgain</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">userAgain</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="s">&quot;username&quot;</span><span class="p">,</span> <span class="s">&quot;another_username&quot;</span><span class="p">);</span>
+            <span class="n">userAgain</span><span class="p">.</span><span class="n">save</span><span class="p">(</span><span class="n">null</span><span class="p">,</span> <span class="p">{</span>
+              <span class="nl">error:</span> <span class="n">function</span><span class="p">(</span><span class="n">userAgain</span><span class="p">,</span> <span class="n">error</span><span class="p">)</span> <span class="p">{</span>
+                <span class="c1">// This will error, since the Parse.User is not authenticated</span>
+              <span class="p">}</span>
+            <span class="p">});</span>
+          <span class="p">}</span>
+        <span class="p">});</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+  <span class="p">}</span>
+<span class="p">});</span></pre></div>
+    <p>The <code>Parse.User</code> obtained from <code>Parse.User.current()</code> will always be authenticated.</p>
+
+    <p>If you need to check if a <code>Parse.User</code> is authenticated, you can invoke the <code>isAuthenticated</code> method. You do not need to check <code>isAuthenticated</code> with <code>Parse.User</code> objects that are obtained via an authenticated method.</p>
+
+    <a href="#" name="users-acls"></a><a href="#" class="section section_minor" name="users-acls_anchor"></a>
+    <h3>Security For Other Objects</h3>
+
+    <p>The same security model that applies to the <code>Parse.User</code> can be applied to other objects. For any object, you can specify which users are allowed to read the object, and which users are allowed to modify an object. To support this type of security, each object has an <a href="http://en.wikipedia.org/wiki/Access_control_list">access control list</a>, implemented by the <code>Parse.ACL</code> class.</p>
+
+    <p>The simplest way to use a <code>Parse.ACL</code> is to specify that an object may only be read or written by a single user. To create such an object, there must first be a logged in <code>Parse.User</code>. Then, <code>new Parse.ACL(user)</code> generates a <code>Parse.ACL</code> that limits access to that user. An object's ACL is updated when the object is saved, like any other property. Thus, to create a private note that can only be accessed by the current user:</p>
+
+    <div class="code objective-c"><pre><span class="n">var</span> <span class="n">Note</span> <span class="o">=</span> <span class="n">Parse</span><span class="p">.</span><span class="n">Object</span><span class="p">.</span><span class="n">extend</span><span class="p">(</span><span class="s">&quot;Note&quot;</span><span class="p">);</span>
+<span class="n">var</span> <span class="n">privateNote</span> <span class="o">=</span> <span class="n">new</span> <span class="n">Note</span><span class="p">();</span>
+<span class="n">privateNote</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="s">&quot;content&quot;</span><span class="p">,</span> <span class="s">&quot;This note is private!&quot;</span><span class="p">);</span>
+<span class="n">privateNote</span><span class="p">.</span><span class="n">setACL</span><span class="p">(</span><span class="n">new</span> <span class="n">Parse</span><span class="p">.</span><span class="n">ACL</span><span class="p">(</span><span class="n">Parse</span><span class="p">.</span><span class="n">User</span><span class="p">.</span><span class="n">current</span><span class="p">());</span>
+<span class="n">privateNote</span><span class="p">.</span><span class="n">save</span><span class="p">();</span></pre></div>
+    <p>This note will then only be accessible to the current user, although it will be accessible to any device where that user is signed in. This functionality is useful for applications where you want to enable access to user data across multiple devices, like a personal todo list.</p>
+
+    <p>Permissions can also be granted on a per-user basis. You can add permissions individually to a <code>Parse.ACL</code> using <code>setReadAccess</code> and <code>setWriteAccess</code>. For example, let's say you have a message that will be sent to a group of several users, where each of them have the rights to read and delete that message:</p>
+
+    <div class="code objective-c"><pre><span class="n">var</span> <span class="n">Message</span> <span class="o">=</span> <span class="n">Parse</span><span class="p">.</span><span class="n">Object</span><span class="p">.</span><span class="n">extend</span><span class="p">(</span><span class="s">&quot;Message&quot;</span><span class="p">);</span>
+<span class="n">var</span> <span class="n">groupMessage</span> <span class="o">=</span> <span class="n">new</span> <span class="n">Message</span><span class="p">();</span>
+<span class="n">var</span> <span class="n">groupACL</span> <span class="o">=</span> <span class="n">new</span> <span class="n">Parse</span><span class="p">.</span><span class="n">ACL</span><span class="p">();</span>
+
+<span class="c1">// userList is an array with the users we are sending this message to.</span>
+<span class="k">for</span> <span class="p">(</span><span class="n">var</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">userList</span><span class="p">.</span><span class="n">length</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">groupACL</span><span class="p">.</span><span class="n">setReadAccess</span><span class="p">(</span><span class="n">userList</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">true</span><span class="p">);</span>
+  <span class="n">groupACL</span><span class="p">.</span><span class="n">setWriteAccess</span><span class="p">(</span><span class="n">userList</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">true</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="n">groupMessage</span><span class="p">.</span><span class="n">setACL</span><span class="p">(</span><span class="n">groupACL</span><span class="p">);</span>
+<span class="n">groupMessage</span><span class="p">.</span><span class="n">save</span><span class="p">();</span></pre></div>
+    <p>You can also grant permissions to all users at once using <code>setPublicReadAccess</code> and <code>setPublicWriteAccess</code>. This allows patterns like posting comments on a message board. For example, to create a post that can only be edited by its author, but can be read by anyone:</p>
+
+    <div class="code objective-c"><pre><span class="n">var</span> <span class="n">publicPost</span> <span class="o">=</span> <span class="n">new</span> <span class="n">Post</span><span class="p">();</span>
+<span class="n">var</span> <span class="n">postACL</span> <span class="o">=</span> <span class="n">new</span> <span class="n">Parse</span><span class="p">.</span><span class="n">ACL</span><span class="p">(</span><span class="n">Parse</span><span class="p">.</span><span class="n">User</span><span class="p">.</span><span class="n">current</span><span class="p">());</span>
+<span class="n">postACL</span><span class="p">.</span><span class="n">setPublicReadAccess</span><span class="p">(</span><span class="n">true</span><span class="p">);</span>
+<span class="n">publicPost</span><span class="p">.</span><span class="n">setACL</span><span class="p">(</span><span class="n">postACL</span><span class="p">);</span>
+<span class="n">publicPost</span><span class="p">.</span><span class="n">save</span><span class="p">();</span></pre></div>    
+    <p>Operations that are forbidden, such as deleting an object that you do not have write access to, result in a <code>Parse.Error.OBJECT_NOT_FOUND</code> error code. For security purposes, this prevents clients from distinguishing which object ids exist but are secured, versus which object ids do not exist at all.</p>
+    
+    <a href="#" name="users-resetting"></a><a href="#" class="section section_minor" name="users-resetting_anchor"></a>
+    <h3>Resetting Passwords</h3>
+
+    <p>It's a fact that as soon as you introduce passwords into a system, users will forget them. In such cases, our library provides a way to let them securely reset their password.</p>
+
+    <p>To kick off the password reset flow, ask the user for their email address, and call:</p>
+
+    <div class="code objective-c"><pre><span class="n">Parse</span><span class="p">.</span><span class="n">User</span><span class="p">.</span><span class="n">requestPasswordReset</span><span class="p">(</span><span class="s">&quot;email@example.com&quot;</span><span class="p">);</span></pre></div>
+    <p>This will attempt to match the given email with the user's email or username field, and will send them a password reset email. By doing this, you can opt to have users use their email as their username, or you can collect it separately and store it in the email field.</p>
+
+    <p>The flow for password reset is as follows:</p>
+
+    <ol>
+        <li>User requests that their password be reset by typing in their email.</li>
+        <li>Parse sends an email to their address, with a special password reset link.</li>
+        <li>User clicks on the reset link, and is directed to a special Parse page that will allow them type in a new password.</li>
+        <li>User types in a new password. Their password has now been reset to a value they specify.</li>
+    </ol>
+
+    <p>Note that the messaging in this flow will reference your app by the name that you specified when you created this app on Parse.</p>
+
+    <a href="#" name="users-querying"></a><a href="#" class="section section_minor" name="users-querying_anchor"></a>
+    <h3>Querying</h3>
+
+    <p>To query for users, you can simple create a new <code>Parse.Query</code> for <code>Parse.User</code>s:</p>
+
+    <div class="code objective-c"><pre><span class="n">var</span> <span class="n">query</span> <span class="o">=</span> <span class="n">new</span> <span class="n">Parse</span><span class="p">.</span><span class="n">Query</span><span class="p">(</span><span class="n">Parse</span><span class="p">.</span><span class="n">User</span><span class="p">);</span>
+<span class="n">query</span><span class="p">.</span><span class="n">equalTo</span><span class="p">(</span><span class="n">gender</span><span class="p">,</span> <span class="s">&quot;female&quot;</span><span class="p">);</span>  <span class="c1">// find all the women</span>
+<span class="n">query</span><span class="p">.</span><span class="n">find</span><span class="p">({</span>
+  <span class="nl">success:</span> <span class="n">function</span><span class="p">(</span><span class="n">women</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// Do stuff</span>
+  <span class="p">}</span>
+<span class="p">});</span></pre></div>
+    <a href="#" name="users-associations"></a><a href="#" class="section section_minor" name="users-associations_anchor"></a>
+    <h3>Associations</h3>
+
+    <p>Associations involving a <code>Parse.User</code> work right of the box. For example, let's say you're making a blogging app. To store a new post for a user and retrieve all their posts:</p>
+
+    <div class="code objective-c"><pre><span class="n">var</span> <span class="n">user</span> <span class="o">=</span> <span class="n">Parse</span><span class="p">.</span><span class="n">User</span><span class="p">.</span><span class="n">current</span><span class="p">();</span>
+
+<span class="c1">// Make a new post</span>
+<span class="n">var</span> <span class="n">Post</span> <span class="o">=</span> <span class="n">Parse</span><span class="p">.</span><span class="n">Object</span><span class="p">.</span><span class="n">extend</span><span class="p">(</span><span class="s">&quot;Post&quot;</span><span class="p">);</span>
+<span class="n">var</span> <span class="n">post</span> <span class="o">=</span> <span class="n">new</span> <span class="n">Post</span><span class="p">();</span>
+<span class="n">post</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="s">&quot;title&quot;</span><span class="p">,</span> <span class="s">&quot;My New Post&quot;</span><span class="p">);</span>
+<span class="n">post</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="s">&quot;body&quot;</span><span class="p">,</span> <span class="s">&quot;This is some great content.&quot;</span><span class="p">);</span>
+<span class="n">post</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="s">&quot;user&quot;</span><span class="p">,</span> <span class="n">user</span><span class="p">);</span>
+<span class="n">post</span><span class="p">.</span><span class="n">save</span><span class="p">(</span><span class="n">null</span><span class="p">,</span> <span class="p">{</span>
+  <span class="nl">success:</span> <span class="n">function</span><span class="p">(</span><span class="n">post</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// Find all posts by the current user</span>
+    <span class="n">var</span> <span class="n">query</span> <span class="o">=</span> <span class="n">new</span> <span class="n">Parse</span><span class="p">.</span><span class="n">Query</span><span class="p">(</span><span class="n">Post</span><span class="p">);</span>
+    <span class="n">query</span><span class="p">.</span><span class="n">equalTo</span><span class="p">(</span><span class="s">&quot;user&quot;</span><span class="p">,</span> <span class="n">user</span><span class="p">);</span>
+    <span class="n">query</span><span class="p">.</span><span class="n">find</span><span class="p">({</span>
+      <span class="nl">success:</span> <span class="n">function</span><span class="p">(</span><span class="n">usersPosts</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// userPosts contains all of the posts by the current user.</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+  <span class="p">}</span>
+<span class="p">});</span></pre></div>
+    <a href="#" name="users-browser"></a><a href="#" class="section section_minor" name="users-browser_anchor"></a>
+    <h3>Users in the Data Browser</h3>
+
+    <p>The User class is a special class that is dedicated to storing <code>Parse.User</code> objects. In the data browser, you'll see a little person icon next to the User class:</p>
+
+    <p><img alt="User_icon" src="/images/docs/user_icon.png?5ec20cd" style="border: 1px solid #eee" /></p>
+
+    <a href="#" name="roles"></a><a href="#" class="section section_minor" name="roles_anchor"></a>
+    <h2>Roles</h2>
+    <p>
+        As your app grows in scope and user-base, you may find yourself needing more coarse-grained control over access to pieces of your data than
+        user-linked ACLs can provide. To address this requirement, Parse supports a form of
+        <a href="http://en.wikipedia.org/wiki/Role-based_access_control">Role-based Access Control</a>.
+        Roles provide a logical way of grouping users with common access privileges to your Parse data. Roles are
+        named objects that contain users and other roles.  Any permission granted to a role is implicitly granted to its users as well as to the
+        users of any roles that it contains.
+    </p>
+    
+    <p>
+        For example, in your application with curated content, you may have a number of users that are considered "Moderators" and can modify and
+        delete content created by other users.  You may also have a set of users that are "Administrators" and are allowed all of the same
+        privileges as Moderators, but can also modify the global settings for the application. By adding users to these roles, you
+        can ensure that new users can be made moderators or administrators, without having to manually grant permission to every resource for each
+        user.
+    </p>
+    
+    <p>
+        We provide a specialized class called <code>Parse.Role</code> that represents these role objects in your client code.
+        <code>Parse.Role</code> is a subclass of <code>Parse.Object</code>, and has all of the same features, such as a flexible
+        schema, automatic persistence, and a key value interface.  All the methods that are on <code>Parse.Object</code> also 
+        exist on <code>Parse.Role</code>.  The difference is that <code>Parse.Role</code> has some additions specific to management of roles.
+    </p>
+    
+    <a href="#" name="roles-props"></a><a href="#" class="section section_minor" name="roles-props_anchor"></a>
+    <h3>Properties</h3>
+    <p>
+        <code>Parse.Role</code> has several properties that set it apart from <code>Parse.Object</code>:
+    </p>
+    <ul class="text">
+      <li>
+          name: The name for the role.  This value is required, and can only be set once as a role is being created.  The name
+          must consist of alphanumeric characters, spaces, -, or _.  This name will be used to identify the Role without needing
+          its objectId.
+      </li>
+      <li>
+          users: A <a href="#objects-pointers">relation</a> to the set of users that will inherit permissions granted to the containing role.
+      </li>
+      <li>
+          roles: A <a href="#objects-pointers">relation</a> to the set of roles whose users and roles will inherit permissions granted to the
+          containing role.
+      </li>
+    </ul>
+    
+    <a href="#" name="roles-security"></a><a href="#" class="section section_minor" name="roles-security_anchor"></a>
+    <h3>Security for Role Objects</h3>
+    <p>
+        The <code>Parse.Role</code> uses the same security scheme (ACLs) as all other objects on Parse, except that it requires an ACL
+        to be set explicitly. Generally, only users with greatly elevated privileges (e.g. a master user or Administrator) should be able
+        to create or modify a Role, so you should define its ACLs accordingly.  Remember, if you give write-access to a
+        <code>Parse.Role</code> to a user, that user can add other users to the role, or even delete the role altogether.
+    </p>
+    
+    <p>
+        To create a new <code>Parse.Role</code>, you would write:
+    </p>
+<div class="code objective-c"><pre><span class="c1">// By specifying no write privileges for the ACL, we can ensure the role cannot be altered.</span>
+<span class="n">var</span> <span class="n">roleACL</span> <span class="o">=</span> <span class="n">new</span> <span class="n">Parse</span><span class="p">.</span><span class="n">ACL</span><span class="p">();</span>
+<span class="n">roleACL</span><span class="p">.</span><span class="n">setPublicReadAccess</span><span class="p">(</span><span class="n">true</span><span class="p">);</span>
+<span class="n">var</span> <span class="n">role</span> <span class="o">=</span> <span class="n">new</span> <span class="n">Parse</span><span class="p">.</span><span class="n">Role</span><span class="p">(</span><span class="s">&quot;Administrator&quot;</span><span class="p">,</span> <span class="n">roleACL</span><span class="p">);</span>
+<span class="n">role</span><span class="p">.</span><span class="n">save</span><span class="p">();</span></pre></div>
+    <p>
+        You can add users and roles that should inherit your new role's permissions through the "users" and "roles" relations on <code>Parse.Role</code>:
+    </p>
+
+<div class="code objective-c"><pre><span class="n">var</span> <span class="n">role</span> <span class="o">=</span> <span class="n">new</span> <span class="n">Parse</span><span class="p">.</span><span class="n">Role</span><span class="p">(</span><span class="n">roleName</span><span class="p">,</span> <span class="n">roleACL</span><span class="p">);</span>
+<span class="k">for</span> <span class="p">(</span><span class="n">var</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">usersToAddToRole</span><span class="p">.</span><span class="n">length</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">role</span><span class="p">.</span><span class="n">getUsers</span><span class="p">().</span><span class="n">add</span><span class="p">(</span><span class="n">usersToAddToRole</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+<span class="p">}</span>
+<span class="k">for</span> <span class="p">(</span><span class="n">var</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">rolesToAddToRole</span><span class="p">.</span><span class="n">length</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">role</span><span class="p">.</span><span class="n">getRoles</span><span class="p">().</span><span class="n">add</span><span class="p">(</span><span class="n">rolesToAddToRole</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+<span class="p">}</span>
+<span class="n">role</span><span class="p">.</span><span class="n">save</span><span class="p">();</span></pre></div>
+    <p>
+      Take great care when assigning ACLs to your roles so that they can only be modified by those who should have permissions to modify them.
+    </p>
+
+    <a href="#" name="roles-acls"></a><a href="#" class="section section_minor" name="roles-acls_anchor"></a>
+    <h3>Security for Other Objects</h3>
+    <p>
+        Now that you have created a set of roles for use in your application, you can use them with ACLs to define the privileges that their users will receive.
+        Each <code>Parse.Object</code> can specify a <code>Parse.ACL</code>, which provides an access control list that indicates which users and roles
+        should be granted read or write access to the object.
+    </p>
+
+    <p>
+        Giving a role read or write permission to an object is straightforward.  You can either use the <code>Parse.Role</code>:
+    </p>
+
+<div class="code objective-c"><pre><span class="n">var</span> <span class="n">moderators</span> <span class="o">=</span> <span class="cm">/* Query for some Parse.Role */</span><span class="p">;</span>
+<span class="n">var</span> <span class="n">wallPost</span> <span class="o">=</span> <span class="n">new</span> <span class="n">Parse</span><span class="p">.</span><span class="n">Object</span><span class="p">(</span><span class="s">&quot;WallPost&quot;</span><span class="p">);</span>
+<span class="n">var</span> <span class="n">postACL</span> <span class="o">=</span> <span class="n">new</span> <span class="n">Parse</span><span class="p">.</span><span class="n">ACL</span><span class="p">();</span>
+<span class="n">postACL</span><span class="p">.</span><span class="n">setRoleWriteAccess</span><span class="p">(</span><span class="n">moderators</span><span class="p">);</span>
+<span class="n">wallPost</span><span class="p">.</span><span class="n">setACL</span><span class="p">(</span><span class="n">postACL</span><span class="p">);</span>
+<span class="n">wallPost</span><span class="p">.</span><span class="n">save</span><span class="p">();</span></pre></div>
+    <p>
+        You can avoid querying for a role by specifying its name for the ACL:
+    </p>
+
+<div class="code objective-c"><pre><span class="n">var</span> <span class="n">wallPost</span> <span class="o">=</span> <span class="n">new</span> <span class="n">ParseObject</span><span class="p">(</span><span class="s">&quot;WallPost&quot;</span><span class="p">);</span>
+<span class="n">car</span> <span class="n">postACL</span> <span class="o">=</span> <span class="n">new</span> <span class="n">ParseACL</span><span class="p">();</span>
+<span class="n">postACL</span><span class="p">.</span><span class="n">setRoleWriteAccess</span><span class="p">(</span><span class="s">&quot;Moderators&quot;</span><span class="p">,</span> <span class="n">true</span><span class="p">);</span>
+<span class="n">wallPost</span><span class="p">.</span><span class="n">setACL</span><span class="p">(</span><span class="n">postACL</span><span class="p">);</span>
+<span class="n">wallPost</span><span class="p">.</span><span class="n">save</span><span class="p">();</span></pre></div>
+    <a href="#" name="roles-hierarchy"></a><a href="#" class="section section_minor" name="roles-hierarchy_anchor"></a>
+    <h3>Role Hierarchy</h3>
+    <p>
+        As described above, one role can contain another, establishing a parent-child relationship between the two roles. The consequence of this
+        relationship is that any permission granted to the parent role is implicitly granted to all of its child roles.
+    </p>
+    <p>
+        These types of relationships are commonly found in applications with user-managed content, such as forums. Some small subset of users
+        are "Administrators", with the highest level of access to tweaking the application's settings, creating new forums, setting global
+        messages, and so on. Another set of users are "Moderators", who are responsible for ensuring that the content created by users remains
+        appropriate. Any user with Administrator privileges should also be granted the permissions of any Moderator. To establish this relationship,
+        you would make your "Administrators" role a child role of "Moderators", like this:
+    </p>
+
+<div class="code objective-c"><pre><span class="n">var</span> <span class="n">administrators</span> <span class="o">=</span> <span class="cm">/* Your &quot;Administrators&quot; role */</span><span class="p">;</span>
+<span class="n">var</span> <span class="n">moderators</span> <span class="o">=</span> <span class="cm">/* Your &quot;Moderators&quot; role */</span><span class="p">;</span>
+<span class="n">moderators</span><span class="p">.</span><span class="n">getRoles</span><span class="p">().</span><span class="n">add</span><span class="p">(</span><span class="n">administrators</span><span class="p">);</span>
+<span class="n">moderators</span><span class="p">.</span><span class="n">save</span><span class="p">();</span></pre></div>
+    <a href="#" name="roles-quotas"></a><a href="#" class="section section_minor" name="roles-quotas_anchor"></a>
+    <h3>Role Quotas</h3>
+    <p>
+        Role-based access control is a premium feature of the Parse platform. If you are on the "Basic" plan are limited to 1
+        custom role, which you can use to protect access for most basic applications that need broader security groups.  Parse
+        will not allow you to exceed this quota by accident, preventing you from creating new Roles until you upgrade your plan.
+    </p>
+    
+    <p>
+        If your current plan is "Pro" or above, you will have an allotment of roles included with your package, and creating
+        Roles exceeding this quota will result in additional charges.
+    </p>
+    
+    <p>
+        For more information, please see our <a href="https://parse.com/plans">Plans</a> page.
+    </p>
+
+    <a href="#" name="geo"></a><a href="#" class="section section_major" name="geo_anchor"></a>
+    <h2>GeoPoints</h2>
+
+    <p>Parse allows you to associate real-world latitude and longitude coordinates with an object.  Adding a <code>Parse.GeoPoint</code> to a <code>Parse.Object</code> allows queries to take into account the proximity of an object to a reference point.  This allows you to easily do things like find out what user is closest to another user or which places are closest to a user.</p>
+
+    <a href="#" name="geo-classes"></a><a href="#" class="section section_minor" name="geo-classes_anchor"></a>
+    <h3>Parse.GeoPoint</h3>
+
+    <p>To associate a point with an object you first need to create a <code>Parse.GeoPoint</code>.  For example, to create a point with latitude of 40.0 degrees and -30.0 degrees longitude:</p>
+    <div class="code objective-c"><pre><span class="n">var</span> <span class="n">point</span> <span class="o">=</span> <span class="n">new</span> <span class="n">Parse</span><span class="p">.</span><span class="n">GeoPoint</span><span class="p">({</span><span class="nl">latitude:</span> <span class="mf">40.0</span><span class="p">,</span> <span class="nl">longitude:</span> <span class="o">-</span><span class="mf">30.0</span><span class="p">});</span></pre></div>
+    <p>This point is then stored in the object as a regular field.</p>
+    <div class="code objective-c"><pre><span class="n">placeObject</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="s">&quot;location&quot;</span><span class="p">,</span> <span class="n">point</span><span class="p">);</span></pre></div>    <p>Note: Currently only one key in a class may be a <code>Parse.GeoPoint</code>.</p> 
+
+    <a href="#" name="geo-query"></a><a href="#" class="section section_minor" name="geo-query_anchor"></a>
+    <h3>Geo Queries</h3>
+    <p>Now that you have a bunch of objects with spatial coordinates, it would be nice to find out which objects are closest to a point.  This can be done by adding another restriction to <code>Parse.Query</code> using <code>near</code>.  Getting a list of ten places that are closest to a user may look something like:</p>
+    <div class="code objective-c"><pre><span class="c1">// User&#39;s location</span>
+<span class="n">var</span> <span class="n">userGeoPoint</span> <span class="o">=</span> <span class="n">userObject</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;location&quot;</span><span class="p">);</span>
+<span class="c1">// Create a query for places</span>
+<span class="n">var</span> <span class="n">query</span> <span class="o">=</span> <span class="n">new</span> <span class="n">Parse</span><span class="p">.</span><span class="n">Query</span><span class="p">(</span><span class="n">PlaceObject</span><span class="p">);</span>
+<span class="c1">// Interested in locations near user.</span>
+<span class="n">query</span><span class="p">.</span><span class="n">near</span><span class="p">(</span><span class="s">&quot;location&quot;</span><span class="p">,</span> <span class="n">userGeoPoint</span><span class="p">);</span>
+<span class="c1">// Limit what could be a lot of points.</span>
+<span class="n">query</span><span class="p">.</span><span class="n">limit</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>
+<span class="c1">// Final list of objects</span>
+<span class="n">query</span><span class="p">.</span><span class="n">find</span><span class="p">({</span>
+  <span class="nl">success:</span> <span class="n">function</span><span class="p">(</span><span class="n">placesObjects</span><span class="p">)</span> <span class="p">{</span>
+  <span class="p">}</span>
+<span class="p">});</span></pre></div>    <p> At this point <code>placesObjects</code> will be an array of objects ordered by distance (nearest to farthest) from <code>userGeoPoint</code>. </p>
+    <p> To limit the results using distance, check out <code>withinMiles</code>, <code>withinKilometers</code>, and <code>withinRadians</code>.</p>
+
+    <a href="#" name="geo-limitations"></a><a href="#" class="section section_minor" name="geo-limitations_anchor"></a>
+    <h3>Caveats</h3>
+    <p> At the moment there are a couple of things to watch out for:</p>
+    <ol>
+      <li>Each Parse.Object class may only have one key with a Parse.GeoPoint object.</li>
+      <li>Points should not equal or exceed the extreme ends of the ranges.  Latitude should not be -90.0 or 90.0.  Longitude should not be -180.0 or 180.0.  Attempting to set latitude or longitude out of bounds will cause an error.</li>
+    </ol>
+
+    <a href="#" name="views"></a><a href="#" class="section section_major" name="views_anchor"></a>
+    <h2>Views</h2>
+
+    <p>We've included <code>Parse.View</code> which is just a copy of <code>Backbone.View</code>. Feel free to use it for constructing views in your app. Take a look at the <a href="http://documentcloud.github.com/backbone/#View">Backbone.View API</a> for details on how to use this class.  Note that once you use <code>Parse.View</code>, you will need to include jQuery or a jQuery compatible <code>$</code> method.</p>
+
+    <a href="#" name="convert"></a><a href="#" class="section section_major" name="convert_anchor"></a>
+
+    <h2>Converting Backbone Apps</h2>
+
+    <p>If you already have an existing <a href="http://documentcloud.github.com/backbone/">Backbone</a> application, it's easy to convert it to use our JavaScript SDK. After converting, you'll end up with a collection of static files that contain all your app's functionality.</p>
+
+    <p>Our JavaScript SDK is Backbone compatible, which means that our <code>Parse.Object</code> and <code>Parse.Collection</code> can be dropped in for <code>Backbone.Model</code> and <code>Backbone.Collection</code> with minor tweaks. Here's how to convert your app:</p>
+
+    <ol>
+      <li><a href="/apps/quickstart#js/existing">Follow the instructions for installing the SDK for an existing JavaScript app</a>.</li>
+      <li>
+        <p>Replace all instances of <code>Backbone.Model</code> with <code>Parse.Object</code>. When doing so, <code>url</code> and <code>urlRoot</code> should be replaced with an appropriate <code>className</code> that maps your objects to a Parse class:</p>
+
+        <div class="code javascript"><pre><span class="kd">var</span> <span class="nx">BackboneTodo</span> <span class="o">=</span> <span class="nx">Backbone</span><span class="p">.</span><span class="nx">Model</span><span class="p">.</span><span class="nx">extend</span><span class="p">({</span>
+  <span class="nx">urlRoot</span><span class="o">:</span> <span class="s2">&quot;/todos&quot;</span>
+<span class="p">});</span>
+
+<span class="kd">var</span> <span class="nx">ParseTodo</span> <span class="o">=</span> <span class="nx">Parse</span><span class="p">.</span><span class="nb">Object</span><span class="p">.</span><span class="nx">extend</span><span class="p">({</span>
+  <span class="nx">className</span><span class="o">:</span> <span class="s2">&quot;Todo&quot;</span>
+<span class="p">});</span></pre></div>      </li>
+      <li>
+        <p>Replace all instances of <code>Backbone.Collection</code> with <code>Parse.Collection</code> and specify the <code>Parse.Object</code> class as the <code>model</code>. You should also specify a <code>query</code> so that the collection knows how to fetch the objects:</p>
+        <div class="code javascript"><pre><span class="kd">var</span> <span class="nx">ParseTodoCollection</span> <span class="o">=</span> <span class="nx">Parse</span><span class="p">.</span><span class="nx">Collection</span><span class="p">({</span>
+  <span class="nx">model</span><span class="o">:</span> <span class="nx">ParseTodo</span>
+<span class="p">});</span>
+
+<span class="kd">var</span> <span class="nx">todos</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ParseTodoCollection</span><span class="p">();</span>
+
+<span class="c1">// Construct a query to get the current user&#39;s todo items</span>
+<span class="kd">var</span> <span class="nx">query</span> <span class="o">=</span> <span class="nx">Parse</span><span class="p">.</span><span class="nx">Query</span><span class="p">(</span><span class="nx">ParseTodo</span><span class="p">);</span>
+<span class="nx">query</span><span class="p">.</span><span class="nx">equalTo</span><span class="p">(</span><span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="nx">Parse</span><span class="p">.</span><span class="nx">User</span><span class="p">.</span><span class="nx">current</span><span class="p">());</span>
+<span class="nx">todos</span><span class="p">.</span><span class="nx">query</span> <span class="o">=</span> <span class="nx">query</span><span class="p">;</span>
+<span class="nx">todos</span><span class="p">.</span><span class="nx">fetch</span><span class="p">();</span></pre></div>      </li>
+      <li>
+        <p>
+          Anywhere you were constructing models from the server you'll need to construct a <code>Parse.Query</code> to grab the objects that you're interested in, similar to what we had to do for the <code>query</code> attribute on the <code>Parse.Collection</code>.
+        </p>
+      </li>
+      <li>Add or update your app to use <a href="/docs/js_guide#users">user authentication</a> and apply ACLs as necessary to objects.</li>
+    </ol>
+
+    <p>And that's it. Your app should be functional and using Parse as the backend.</p>
+
+    <a href="#" name="errors"></a><a href="#" class="section section_minor" name="errors_anchor"></a>
+    <h2>Error Handling</h2>
+
+    <p>Most Parse JavaScript functions report their success or failure using an object with callbacks, similar to a Backbone "options" object.  The two primary callbacks used are <code>success</code> and <code>error</code>.  <code>success</code> is called whenever an operation completes without errors.  Generally, its parameter will be either the <code>Parse.Object</code> in the case of <code>save</code> or <code>get</code>, or an array of <code>Parse.Object</code> for <code>find</code>.</p>
+
+    <p><code>error</code> is called for any kind of error that occurs when interacting with Parse servers over the network. These errors are either related to problems connecting to the server or problems performing the requested operation. Let's take a look at another example.  In the code below, we try to fetch an object with a non-existent <code>objectId</code>. The Parse server will return an error - so here's how to handle it properly in your callback:</p>
+
+    <div class="code objective-c"><pre><span class="n">var</span> <span class="n">query</span> <span class="o">=</span> <span class="n">new</span> <span class="n">Parse</span><span class="p">.</span><span class="n">Query</span><span class="p">(</span><span class="n">Note</span><span class="p">);</span>
+<span class="n">query</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;aBcDeFgH&quot;</span><span class="p">,</span> <span class="p">{</span>
+  <span class="nl">success:</span> <span class="n">function</span><span class="p">(</span><span class="n">results</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// This function will *not* be called.</span>
+    <span class="n">alert</span><span class="p">(</span><span class="s">&quot;Everything went fine!&quot;</span><span class="p">);</span>
+  <span class="p">},</span>
+  <span class="nl">error:</span> <span class="n">function</span><span class="p">(</span><span class="n">error</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// This will be called.</span>
+    <span class="c1">// error is an instance of Parse.Error with details about the error.</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">error</span><span class="p">.</span><span class="n">code</span> <span class="o">===</span> <span class="n">Parse</span><span class="p">.</span><span class="n">Error</span><span class="p">.</span><span class="n">OBJECT_NOT_FOUND</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">alert</span><span class="p">(</span><span class="s">&quot;Uh oh, we couldn&#39;t find the object!&quot;</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">});</span></pre></div>
+    <p>The query might also fail because the device couldn't connect to the Parse servers. Here's the same callback but with a bit of extra code to handle that scenario:</p>
+
+    <div class="code objective-c"><pre><span class="n">var</span> <span class="n">query</span> <span class="o">=</span> <span class="n">new</span> <span class="n">Parse</span><span class="p">.</span><span class="n">Query</span><span class="p">(</span><span class="n">Note</span><span class="p">);</span>
+<span class="n">query</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;thisObjectIdDoesntExist&quot;</span><span class="p">,</span> <span class="p">{</span>
+  <span class="nl">success:</span> <span class="n">function</span><span class="p">(</span><span class="n">results</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// This function will *not* be called.</span>
+    <span class="n">alert</span><span class="p">(</span><span class="s">&quot;Everything went fine!&quot;</span><span class="p">);</span>
+  <span class="p">},</span>
+  <span class="nl">error:</span> <span class="n">function</span><span class="p">(</span><span class="n">error</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// This will be called.</span>
+    <span class="c1">// error is an instance of Parse.Error with details about the error.</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">error</span><span class="p">.</span><span class="n">code</span> <span class="o">===</span> <span class="n">Parse</span><span class="p">.</span><span class="n">Error</span><span class="p">.</span><span class="n">OBJECT_NOT_FOUND</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">alert</span><span class="p">(</span><span class="s">&quot;Uh oh, we couldn&#39;t find the object!&quot;</span><span class="p">);</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">error</span><span class="p">.</span><span class="n">code</span> <span class="o">===</span> <span class="n">Parse</span><span class="p">.</span><span class="n">Error</span><span class="p">.</span><span class="n">CONNECTION_FAILED</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">alert</span><span class="p">(</span><span class="s">&quot;Uh oh, we couldn&#39;t even connect to the Parse servers!&quot;</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">});</span></pre></div>
+    <p>For methods like <code>save</code> and <code>signUp</code> that affect a particular <code>Parse.Object</code>, the first argument to the error function will be the object itself, and the second will be the <code>Parse.Error</code> object.  This is for compatibility with Backbone-type frameworks.  For a list of all possible <code>Parse.Error</code> codes, see the Error Codes section of the <a href="/docs/ss">JavaScript API</a>.</p>
+    
+
+
+	    
+                        </div>
+      </div>
+  </div>
+
+        </div>
+    
+        <div id="footer">
+    <div class="inner">
+        <ul>
+            <li class="header">Parse</li>
+            <li><a href="/about">About</a></li>
+            <li><a href="/jobs">Jobs</a></li>
+            <li><a href="/about/contact">Contact</a></li>
+            <li><a href="/about#press">Press</a></li>
+            <li><a href="/about/policies">Policies</a></li>
+        </ul>
+
+        <ul>
+            <li class="header">Developers</li>
+            <li><a href="/docs">Documentation</a></li>
+            <li><a href="/apps/quickstart">QuickStart Guide</a></li>
+            <li><a href="/docs/ios_guide">iOS Guide</a></li>
+            <li><a href="/docs/ios">iOS API</a></li>
+            <li><a href="/docs/android_guide">Android Guide</a></li>
+            <li><a href="/docs/android">Android API</a></li>
+            <li><a href="/docs/rest">REST API</a></li>
+        </ul>
+
+        <ul>
+            <li class="header">Platform</li>
+            <li><a href="/testimonials">Testimonials</a></li>
+            <li><a href="/help">Help &amp; Support</a></li>
+        </ul>
+
+        <ul>
+            <li class="header">News</li>
+            <li><a href="http://blog.parse.com/">Blog</a></li>
+            <li><a href="http://www.twitter.com/ParseIt">Follow Us</a></li>
+        </ul>
+    </div>
+</div>
+
+
+        
+
+    <script type="text/javascript">
+        App.currentUser = new App.Models.User({"company_name":"","company_type":"unknown","email":"josher19@users.sf.net","id":8607,"name":""});
+    </script>
+
+    <script type="text/javascript">
+            $(document).ready(function() {
+        new App.Views.Docs({ el: $("body"), accordian: true });
+    });
+
+    $(".toggled-code").each(function (index) {
+      $(".code-container .code-section:first-child", this).show();
+      $(".toggles .toggle-item:first-child", this).addClass("selected");
+
+      $(".toggles .toggle-item a", this).click(function () {
+        $(this).parent().siblings().removeClass("selected");
+        $(this).parent().addClass("selected");
+
+        var code_sections = $(this).parent().parent().parent().find(".code-container .code-section");
+        code_sections.hide();
+
+        var my_index = $(this).parent().index();
+        $(code_sections[my_index]).show();
+
+        return false;
+      });
+    });
+    var Swiftype = window.Swiftype || {};
+    (function() {
+    $(".menu .swiftype input").watermark("Search Docs");
+
+        // When we're not on the search page, we simply do a redirect
+        $(".menu .swiftype").submit(function(e) {
+        window.location = '/docs/search#stq=' + $(e.target).find("input").val();
+        return false;
+        });
+    }());
+        new App.Views.HeaderLoggedIn({ el: $("#header") });
+    $(".question_tip").click(function(e) {
+        return false;
+    });
+
+    // Initialize backbone history
+    if(Backbone.history) Backbone.history.start();
+
+    // Disable all buttons on click
+    $('form').submit(function(e) {
+        $(this).find("button").attr("disabled", "disabled").addClass("disabled");
+    });
+        mpq.name_tag("josher19@users.sf.net");
+
+    </script>
+
+    <script type="text/javascript">
+    var _sf_async_config={uid:9705,domain:"parse.com"};
+    (function(){
+      function loadChartbeat() {
+        window._sf_endpt=(new Date()).getTime();
+        var e = document.createElement('script');
+        e.setAttribute('language', 'javascript');
+        e.setAttribute('type', 'text/javascript');
+        e.setAttribute('src',
+           (("https:" == document.location.protocol) ? "https://a248.e.akamai.net/chartbeat.download.akamai.com/102508/" : "http://static.chartbeat.com/") +
+           "js/chartbeat.js");
+        document.body.appendChild(e);
+      }
+      var oldonload = window.onload;
+      window.onload = (typeof window.onload != 'function') ?
+         loadChartbeat : function() { oldonload(); loadChartbeat(); };
+    })();
+
+    </script>
+
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-23813809-1']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+
+    <script type="text/javascript">
+adroll_adv_id = "TPWQ3KFATRE7ZBMCWWN4GR";
+adroll_pix_id = "ZT3W2BOTP5GWVAIGZVMA4R";
+(function () {
+var oldonload = window.onload;
+window.onload = function(){
+   __adroll_loaded=true;
+   var scr = document.createElement("script");
+   var host = (("https:" == document.location.protocol) ? "https://s.adroll.com" : "http://a.adroll.com");
+   scr.setAttribute('async', 'true');
+   scr.type = "text/javascript";
+   scr.src = host + "/j/roundtrip.js";
+   ((document.getElementsByTagName('head') || [null])[0] ||
+    document.getElementsByTagName('script')[0].parentNode).appendChild(scr);
+   if(oldonload){oldonload()}};
+}());
+</script>
+
+    <script type="text/javascript">
+        new Plark.Widget();
+    </script>
+
+
+    
+    </body>
+</html>
+
+
