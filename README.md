@@ -77,3 +77,13 @@ Note this must be appended to the Query String (1st argument of $.parse.get) rat
 
 Use functions to create "where" objects to send to the parse.com server.
 Can also convert to and from a subset of SQL. Sorry, no "_OR_" or "_GROUP BY_"!
+
+## NOTE
+
+This [repo](https://github.com/josher19/parse-where/) was created **before** parse.com came out with their new 
+[Javascript Guide](https://www.parse.com/docs/js_guide).
+
+Definitely worth looking at, especially if you are a Backbone.js fan or 
+want to do User Signup & Login, though there are currently 
+some [typos and errors](https://github.com/josher19/parse-where/wiki/Parse.com-Javascript-Guide) in the sample code.
+
