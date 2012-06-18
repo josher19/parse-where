@@ -21,6 +21,7 @@
     # console.log names
 
     $ ?= {}
+    $.parse ?= {}
     $.parse.get ?= (t,w,cb) -> 
            console.log("$.parse.get")
            console.log(arguments...)
