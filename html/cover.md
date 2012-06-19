@@ -1,6 +1,6 @@
 ## PARSE.COM
 
-I think [Parse.com](https://parse.com/) is a great service, and I'd like to help it grow and become as well known as PhoneGap, Node, or CoffeeScript among developers.
+I think [Parse.com](https://parse.com/) is a great service, and I'd like to help it grow and become at least as known as PhoneGap, Node, or CoffeeScript among developers.
 
 I was an **early employee** in an Internet Startup during the early days of the World Wide Web (1996-2000). 
 We specialized in Maps, Driving Directions, Yellow Pages, and Business Finders, 
