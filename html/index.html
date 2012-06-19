@@ -136,7 +136,7 @@ navigator.geolocation.watchPosition( function(loc) {
         placeObject.set("user", Parse.User.current());
         placeObject.save( mycb );
     
-});
+}, mycb.error, {enableHighAccuracy: true});
 
 //Parse.User.logIn("josh", "PASSWORD", mycb)
 //Parse.User.signUp("josh", "PASSWORD", {}, mycb)
