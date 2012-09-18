@@ -1,0 +1,140 @@
+<!doctype html>
+<head>
+  <meta charset="utf-8">
+
+  <title>My Parse App</title>
+  <meta name="description" content="My Parse App">
+  <meta name="viewport" content="width=device-width">
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/styles.css">
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+  <script type="text/javascript" src="http://www.parsecdn.com/js/parse-1.1.0.min.js"></script>
+</head>
+
+<body>
+  
+  <div id="main">
+    <h1>You're ready to use Parse!</h1>
+
+    <p>Read the documentation and start building your JavaScript app:</p>
+
+    <ul>
+      <li><a href="https://www.parse.com/docs/js_guide">Parse JavaScript Guide</a></li>
+      <li><a href="https://www.parse.com/docs/js">Parse JavaScript API Documentation</a></li>
+    </ul>
+    
+    <form id="inform" action >
+    <input id="TableName" name="TableName" value="TestObject" title="Table Name" />
+    <textarea rows=12 cols=68 title="Data" id="mydata">{"foo":"bar"}</textarea>
+    <button id=doQuery>Query</button>
+    <button id=doSave>Save</button>
+    </form>
+    
+    <div id="results"></div>
+    
+    <div style="display:none" class="error">
+      Looks like there was a problem saving the test object. Make sure you've set your application ID and javascript key correctly in the call to <code>Parse.initialize</code> in this file.
+    </div>
+
+    <div style="display:none" class="success">
+      <p>We've also just created your first object using the following code:</p>
+      
+        <code>
+          var TestObject = Parse.Object.extend("TestObject");<br/>
+          var testObject = new TestObject();<br/>
+          testObject.save({foo: "bar"});
+        </code>
+    </div>
+  </div>
+
+  <script type="text/javascript" src="init.js"></script>
+  <script type="text/javascript">
+    
+    if (typeof global === "undefined") global = window;
+    
+    var ops = {
+      success: function(objects) {
+        $(".success").show();
+        $(".error").fadeOut('slow');
+        var object = objects[0] || objects || {};
+        if (global.console) console.log(objects.length, object.id, object.attributes);
+        jQuery('#results').html((objects.id || Parse._.pluck(objects, 'id').join(", ")) + "<br />\n" + JSON.stringify(objects));
+        ops.lastSuccess = objects;
+      },
+      error: function(model, error) {
+        var errorMessage = "";
+        if (model && model.message) errorMessage = model.message;
+        if (error && error.message) errorMessage = error.message;
+        $(".error").show().append($('<div/>').html(errorMessage));
+        if (global.console && console.warn) console.warn(errorMessage);
+        ops.lastError = error;
+        ops.lastErrorModel = model;
+      }
+    };
+    
+    function makeQuery(ev) {
+        var tbl = jQuery('#TableName').val();
+        if (global.console && console.count) { console.count(tbl); console.log(ev); }
+        var query = new Parse.Query(tbl);
+        
+        query._where = getJSON( jQuery('#mydata').val() ) || {};
+        ops.lastQuery = query;
+        query.find(ops);
+        
+        return false;
+    }
+    
+    jQuery('#doQuery').click(makeQuery);
+    
+    function getJSON(jstr) {
+        results = null;
+        try {
+            results = JSON.parse(jstr);
+        } catch(err) {
+            if (global.console) console.warn(err.stack);
+            var warning = $('<div class=warn />'); 
+            warning.html(err.toString()); 
+            $('.error').show().append('<hr>').append(warning)
+        }
+        
+        return results;
+    }
+    
+    function makeSave(ev) {
+        var tbl = jQuery('#TableName').val();
+        var saveObj = jQuery('#mydata').val();
+        saveObj = getJSON(saveObj);
+        if (global.console) console.log("Saving", saveObj);
+        var TestObject = Parse.Object.extend(tbl);
+        var testObject = new TestObject();
+        if (saveObj) testObject.save(saveObj, {
+          success: function(object) {
+            if (global.console) console.log(object);
+            $(".success").show();
+            $(".error").fadeOut('slow');
+          },
+          error: function(model, error) {
+            $(".error").show();
+            if (global.console) console.warn(model, error);
+          }
+        });
+        return false;
+    }
+    jQuery('#doSave').click(makeSave);
+    
+    // Parse.initialize("APPLICATION_ID", "JAVASCRIPT_KEY");
+    
+    var TestObject = Parse.Object.extend("TestObject");
+    var testObject = new TestObject();
+      if (false) testObject.save({foo: "bar"}, {
+      success: function(object) {
+        $(".success").show();
+      },
+      error: function(model, error) {
+        $(".error").show();
+      }
+    });
+  </script>
+</body>
+
+</html>
