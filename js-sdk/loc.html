@@ -1,0 +1,183 @@
+<!doctype html>
+<head>
+  <meta charset="utf-8">
+
+  <title>Globe Follower</title>
+  <meta name="description" content="Globe Follower is My Parse App">
+  <meta name="viewport" content="width=device-width">
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/styles.css">
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+  <script type="text/javascript" src="http://www.parsecdn.com/js/parse-1.0.4.min.js"></script>  
+  <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-26487682-2']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+  </script>
+</head>
+
+<body>
+  
+  <div id="main">
+    <h1>You're ready to use Parse!</h1>
+
+    <p>Test App will record your current location and add a link to Google Maps.</p>
+
+    <p>Coming Soon:</p>
+
+    <ul>
+      <li>User Signup &amp; Login</li>
+      <li>Query for past locations</li>
+    </ul>
+
+    <p>Read the documentation and start building your JavaScript app:</p>
+
+    <ul>
+      <li><a href="https://www.parse.com/docs/js_guide">Parse JavaScript Guide</a></li>
+      <li><a href="https://www.parse.com/docs/js">Parse JavaScript API Documentation</a></li>
+    </ul>
+
+    <div style="display:none" class="error">
+      Looks like there was a problem saving the test object. Make sure you've set your application ID and javascript key correctly in the call to <code>Parse.initialize</code> in this file.
+    </div>
+
+    <div style="display:none" class="success">
+      <p>We've also just created your first object using the following code:</p>
+      
+        <code>
+          var TestObject = Parse.Object.extend("TestObject");<br/>
+          var testObject = new TestObject();<br/>
+          testObject.save({foo: "bar"});
+        </code>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+Parse.initialize("SJsTXxknMXxPhEquubVXopvb1KSigleKWbSkSDVm", "N1XhUTq1XA75uW203nA4rgr9Y3bInG39AyZi5V63");
+
+var TestObject = Parse.Object.extend("TestObject");
+var testObject = new TestObject();
+  testObject.save({foo: "bar"}, {
+  success: function(object) {
+    $(".success").show();
+  },
+  error: function(model, error) {
+    $(".error").show();
+  }
+});
+
+var PlaceObject = new Parse.Object.extend("PlaceObject")
+    , query = new Parse.Query(PlaceObject);
+
+var mycb = {
+  success : function (obj) {
+    // The object was retrieved successfully.
+    last = obj ;
+    $('.success').fadeOut().fadeIn().html($("<pre/>").html(JSON.stringify(obj, null, ' ')));
+    $('.error').hide();
+  },
+  error : function (obj, error) {
+    $('.error').show().html($("<pre/>").text(JSON.stringify(obj, null, ' ') + "\n\n" + JSON.stringify(error)));
+    $('.success').hide();
+    // The object was not retrieved successfully.
+    // error is a Parse.Error with an error code and description.
+  }
+};
+
+pquery = new Parse.Query(PlaceObject, {});
+// pquery.first(mycb);
+function distance(fromHere,toThere) { return fromHere.get("location").kilometersTo(toThere.get("location")); }
+// pquery.find(mycb)
+// pquery.first(mycb)
+function timediff(fromHere, toThere) { return fromHere.get("geolocation").timestamp - toThere.get("geolocation").timestamp; }
+function showTime(time) { 
+    var unit = "milliseconds (ms)";
+    if (time > 1000) {
+        time /= 1000;
+        units = "seconds";
+        if (time > 60) { 
+            unit = "minutes"; 
+            time /= 60; 
+            if (time > 60) {
+                units = "hours";
+                time /= 60;
+                if (time > 24) {
+                    units = "days";
+                    time /= 24;
+                }
+            }
+        }
+    }
+    return time.toFixed(1) + " " + units;
+}
+
+function showdistance(fromHere,toThere) { 
+    var d = distance(fromHere, toThere), t=timediff(fromHere, toThere);
+    return d.toFixed(2) + " km in " + showTime(t);
+}
+
+var increment = function (attr) { var newval = parseFloat(this.get(attr)) + 1; this.set(attr, newval); return newval; }
+
+
+// Parse.User.currentUser = Parse.User.current
+
+function signUp(username, password, email, phone, cb) {
+    var user = new Parse.User();
+    user.set("username", username || "my name");
+    user.set("password", password || "my pass");
+    user.set("email", email || "email@example.com");
+
+    // other fields can be set just like with Parse.Object
+    user.set("phone", phone || "415-392-0202");
+
+    user.signUp(null, {
+      success: function(user) {
+        alert(' Hooray! Use the app now. ');
+        if (cb) cb(null, user);
+      },
+      error: function(user, error) {
+        // Show the error message somewhere and let the user try again.
+        alert("Error: " + error.code + " " + error.message);
+        if (cb) cb(error, user);
+      }
+    });
+    return user;
+}
+
+
+// getCurrentPosition
+navigator.geolocation.watchPosition( function(loc) { 
+    var point = new Parse.GeoPoint(loc.coords)
+        , placeObject = new PlaceObject();
+        
+        placeObject.set("link", 
+            '<a target=_blank href=http://maps.google.com.hk/maps?q=' + 
+            [loc.coords.latitude, loc.coords.longitude].join(",") + ' >Map</a>');
+        placeObject.set("location", point);
+        placeObject.set("timestamp", loc.timestamp);
+        placeObject.set("now", new Date(loc.timestamp));
+        placeObject.set("geolocation", loc);
+        placeObject.set("user", Parse.User.current());
+        placeObject.save( mycb );
+    
+});
+
+//Parse.User.logIn("josh", "PASSWORD", mycb)
+//Parse.User.signUp("josh", "PASSWORD", {}, mycb)
+
+  </script>
+
+<em>
+Testing Geolocation based searches using new parse.com Javascript API.
+</em>
+</body>
+
+</html>
